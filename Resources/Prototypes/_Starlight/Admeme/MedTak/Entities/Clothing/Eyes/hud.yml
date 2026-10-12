@@ -26,3 +26,4 @@
     - CorgiWearable
   - type: EyeProtection
     protectionTime: 5
+    blocksSpecialVision: False
