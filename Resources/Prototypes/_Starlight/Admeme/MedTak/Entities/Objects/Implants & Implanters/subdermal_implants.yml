@@ -40,7 +40,13 @@
         SoftCritical: rattle-on-trigger-medtak-bronze-soft-critical
         Critical: rattle-on-trigger-medtak-bronze-critical
         Dead: rattle-on-trigger-medtak-bronze-dead
-
+    - type: Access
+      tags:
+        - MedTakClient
+    - type: Tag
+      tags:
+      - DoorBumpOpener
+    - type: IdCard
 - type: entity
   parent: TrackingImplantMedTak
   id: TrackingImplantMedTakSilver

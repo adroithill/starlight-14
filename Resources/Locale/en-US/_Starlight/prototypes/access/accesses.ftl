@@ -54,6 +54,8 @@ id-card-access-level-solgov = SolGov
 id-card-access-level-pirate = Pirate
 id-card-access-level-blackstar = Blackstar
 id-card-access-level-medtak = MedTak
+id-card-access-level-medtak-client = MedTak Client
+id-card-access-level-medtak-vip = MedTak VIP
 id-card-access-level-visitor = Visitor
 
 id-card-access-level-itg = ITG

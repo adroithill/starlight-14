@@ -89,6 +89,8 @@
   - ETO
   - Salvage
   - SalvageLead
+  - MedTakClient
+  - MedTakVip
 
 - type: accessGroup
   id: Syndicate
