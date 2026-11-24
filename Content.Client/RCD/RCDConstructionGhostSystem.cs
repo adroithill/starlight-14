@@ -34,10 +34,6 @@ public sealed partial class RCDConstructionGhostSystem : EntitySystem
     private EntityUid? _lastHeldRcd; // Starlight Edit: RPD/RPLD held-tool rotation sync
     // Starlight Start: RPD
     private bool _useMirrorPrototype = false;
-    #region Starlight
-    private EntityUid? _mirrorStateRcd;
-    private string? _lastPlacementPrototype;
-    #endregion
 
     public override void Initialize()
     {
@@ -69,15 +65,7 @@ public sealed partial class RCDConstructionGhostSystem : EntitySystem
                 string.IsNullOrEmpty(rcd.CachedPrototype.MirrorPrototype))
                 return false;
 
-            // Starlight - start
-            if (_mirrorStateRcd != placerEntity)
-            {
-                _mirrorStateRcd = placerEntity;
-                _useMirrorPrototype = rcd.UseMirrorPrototype;
-            }
-
-            _useMirrorPrototype = !_useMirrorPrototype;
-            // Starlight - end
+            _useMirrorPrototype = !rcd.UseMirrorPrototype;
 
             // tell the server
 
@@ -94,16 +82,17 @@ public sealed partial class RCDConstructionGhostSystem : EntitySystem
 
         // Get current placer data
         var placerEntity = _placementManager.CurrentPermission?.MobUid;
+        var placerProto = _placementManager.CurrentPermission?.EntityType;
         var placerIsRCD = HasComp<RCDComponent>(placerEntity);
-        var canHandleRcdPlacement = !_placementManager.Eraser && (placerEntity == null || placerIsRCD); // Starlight
+
+        // Exit if erasing or the current placer is not an RCD (build mode is active)
+        if (_placementManager.Eraser || (placerEntity != null && !placerIsRCD))
+            return;
 
         // Determine if player is carrying an RCD in their active hand
         // Starlight start
         if ((_remoteControl.ControlledEntity ?? _playerManager.LocalSession?.AttachedEntity) is not { } player)
-        {
-            _mirrorStateRcd = null; // Starlight
             return;
-        }
         // Starlight end
 
         var heldEntity = _hands.GetActiveItem(player);
@@ -111,18 +100,10 @@ public sealed partial class RCDConstructionGhostSystem : EntitySystem
         // Don't open the placement overlay for client-side RCDs.
         // This may happen when predictively spawning one in your hands.
         if (heldEntity != null && IsClientSide(heldEntity.Value))
-        {
-            _mirrorStateRcd = null; // Starlight
             return;
-        }
 
         if (!TryComp<RCDComponent>(heldEntity, out var rcd))
         {
-            _mirrorStateRcd = null; // Starlight
-
-            if (!canHandleRcdPlacement)
-                return;
-
             // If the player was holding an RCD, but is no longer, cancel placement
             if (placerIsRCD)
                 _placementManager.Clear();
@@ -132,18 +113,6 @@ public sealed partial class RCDConstructionGhostSystem : EntitySystem
         }
         // Starlight edit Start: RPD - use the mirrored prototype if the flip state is toggled on
         // var prototype = _protoManager.Index(rcd.ProtoId);
-
-        // Starlight - start
-        if (_mirrorStateRcd != heldEntity)
-        {
-            _mirrorStateRcd = heldEntity;
-            _useMirrorPrototype = rcd.UseMirrorPrototype;
-        }
-        // Starlight - end
-
-        // Exit if erasing or the current placer is not an RCD (build mode is active)
-        if (!canHandleRcdPlacement)
-            return;
 
         // Determine if mirrored
         var cachedProto = rcd.CachedPrototype;
@@ -174,11 +143,11 @@ public sealed partial class RCDConstructionGhostSystem : EntitySystem
         // Starlight End: held-tool rotation resync
 
         // If the placer has not changed, exit
-        // Starlight - start
+        // Starlight edit Start
         if (heldEntity == placerEntity &&
-            _lastPlacementPrototype == prototype &&
+            prototype == placerProto &&
             _placementManager.CurrentPermission?.PlacementOption == desiredMode)
-        // Starlight - end
+        // Starlight edit End
             return;
 
         // Create a new placer
@@ -194,6 +163,5 @@ public sealed partial class RCDConstructionGhostSystem : EntitySystem
 
         _placementManager.Clear();
         _placementManager.BeginPlacing(newObjInfo);
-        _lastPlacementPrototype = prototype; // Starlight
     }
 }

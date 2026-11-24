@@ -10,5 +10,7 @@ namespace Content.Server.Toolshed.TypeParsers.StatusEffects;
 public sealed class StatusEffectCompletionParser : CustomCompletionParser<EntProtoId>
 {
     public override CompletionResult? TryAutocomplete(ParserContext ctx, CommandArgument? arg)
-        => CompletionResult.FromHintOptions(IoCManager.Resolve<IEntityManager>().System<StatusEffectsSystem>().StatusEffectPrototypes.Keys, GetArgHint(arg)); // Starlight-edit
+    {
+        return CompletionResult.FromHintOptions(IoCManager.Resolve<StatusEffectsSystem>().StatusEffectPrototypes.Keys, GetArgHint(arg)); // Starlight
+    }
 }

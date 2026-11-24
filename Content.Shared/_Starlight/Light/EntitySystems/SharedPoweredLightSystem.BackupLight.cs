@@ -1,4 +1,3 @@
-using Content.Shared._Starlight.Light;
 using Content.Shared._Starlight.Light.BackupLight;
 using Content.Shared._Starlight.Light.NightLighting;
 using Content.Shared._Starlight.Shadekin.Components;
@@ -23,10 +22,7 @@ public abstract partial class SharedPoweredLightSystem
         if (!TryComp<BackupLightComponent>(uid, out var backup))
             return false;
 
-        if (powerReceiver.Powered
-            || !light.On
-            || !backup.Charged
-            || (bulb.Comp.Dimmable && TryComp<AlertLevelDimmedLightComponent>(uid, out var alertDim) && alertDim.LightEnergyMultiplier <= 0f))
+        if (powerReceiver.Powered || !light.On || !backup.Charged)
         {
             _appearance.SetData(uid, BackupLightVisuals.Active, false, appearance);
             return false;

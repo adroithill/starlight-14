@@ -42,7 +42,6 @@
       - Terrum
       - Thaveyan
       - VoxPidgin
-      - Xeno
       understands:
       - Aielic
       - Bubblish
@@ -67,7 +66,6 @@
       - Terrum
       - Thaveyan
       - VoxPidgin
-      - Xeno
   # Starlight end
 
 - type: startingGear

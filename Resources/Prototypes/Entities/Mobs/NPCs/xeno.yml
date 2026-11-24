@@ -14,8 +14,6 @@
     understands:
     - Xeno
     - Xenomind
-    - Xenocongress
-    - Xenoqueen
   # Starlight-end
   - type: ThermalVision
   - type: Insulated
@@ -222,13 +220,10 @@
     - GalacticCommon
     - Xeno
     - Xenomind
-    - Xenoqueen
     understands:
     - GalacticCommon
     - Xeno
     - Xenomind
-    - Xenocongress
-    - Xenoqueen
   # Starlight-end
   - type: Sprite
     drawdepth: Mobs

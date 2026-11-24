@@ -10,6 +10,7 @@ public sealed partial class SleepinessOverlaySystem : EntitySystem
     [Dependency] private IPlayerManager _player = default!;
     [Dependency] private IOverlayManager _overlayManager = default!;
     [Dependency] private StatusEffectsSystem _statusEffects = default!;
+    [Dependency] private ILogManager _logManager = default!;
 
     private SleepinessOverlay _overlay = default!;
     private EntityUid? _lastLocalEntity;
@@ -23,10 +24,7 @@ public sealed partial class SleepinessOverlaySystem : EntitySystem
     public override void Shutdown()
     {
         if (_overlayManager.HasOverlay<SleepinessOverlay>())
-        {
-            _overlay.Reset();
             _overlayManager.RemoveOverlay(_overlay);
-        }
 
         base.Shutdown();
     }
@@ -41,10 +39,7 @@ public sealed partial class SleepinessOverlaySystem : EntitySystem
             _lastLocalEntity = localEntity;
 
             if (_overlayManager.HasOverlay<SleepinessOverlay>())
-            {
-                _overlay.Reset();
                 _overlayManager.RemoveOverlay(_overlay);
-            }
 
             _overlay = new SleepinessOverlay();
         }

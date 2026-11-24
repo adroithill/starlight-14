@@ -46,7 +46,7 @@ namespace Content.Shared.Research.Prototypes
         public bool PrintTicket = false;
 
         [DataField]
-        public EntProtoId TicketProtoId = "MiningTicket"; // Starlight Salvage-Station Split
+        public EntProtoId TicketProtoId = "SalvageTicket";
 
         [DataField]
         public Dictionary<ProtoId<ReagentPrototype>, FixedPoint2>? ResultReagents;

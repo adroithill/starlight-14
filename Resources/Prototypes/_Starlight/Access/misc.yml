@@ -108,8 +108,3 @@
 - type: accessLevel
   id: Visitor
   name: id-card-access-level-visitor
-
-- type: accessGroup
-  id: Shuttle
-  tags:
-  - Shuttle

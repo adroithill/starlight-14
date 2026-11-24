@@ -26,9 +26,8 @@ public abstract partial class SharedNavMapSystem : EntitySystem
     [Robust.Shared.IoC.Dependency] private TagSystem _tagSystem = default!;
     [Robust.Shared.IoC.Dependency] private INetManager _net = default!;
 
-    [Robust.Shared.IoC.Dependency] private EntityQuery<NavMapDoorComponent> _doorQuery = default!;
-
     private static readonly ProtoId<TagPrototype>[] WallTags = {"Wall", "Window"};
+    private EntityQuery<NavMapDoorComponent> _doorQuery;
 
     public override void Initialize()
     {
@@ -37,6 +36,8 @@ public abstract partial class SharedNavMapSystem : EntitySystem
         // Data handling events
         SubscribeLocalEvent<NavMapComponent, ComponentGetState>(OnGetState);
         SubscribeLocalEvent<ConfigurableNavMapBeaconComponent, ExaminedEvent>(OnConfigurableExamined);
+
+        _doorQuery = GetEntityQuery<NavMapDoorComponent>();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

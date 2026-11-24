@@ -18,11 +18,13 @@ public sealed partial class TagSystem : EntitySystem
 {
     [Dependency] private IPrototypeManager _proto = default!;
 
-    [Dependency] private EntityQuery<TagComponent> _tagQuery = default!;
+    private EntityQuery<TagComponent> _tagQuery;
 
     public override void Initialize()
     {
         base.Initialize();
+
+        _tagQuery = GetEntityQuery<TagComponent>();
 
 #if DEBUG
         SubscribeLocalEvent<TagComponent, ComponentInit>(OnTagInit);

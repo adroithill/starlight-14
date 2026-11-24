@@ -21,8 +21,8 @@
     SheetPrinter: 100
 
 - type: latheRecipe
-  id: PrintedDocumentReportSituationRecipe
-  result: PrintedDocumentReportSituation
+  id: PrintedDocumentReportStationRecipe
+  result: PrintedDocumentReportStation
   categories:
   - Reports
   completetime: 2
@@ -61,8 +61,8 @@
     SheetPrinter: 100
 
 - type: latheRecipe
-  id: PrintedDocumentVoteRecordRecipe
-  result: PrintedDocumentVoteRecord
+  id: PrintedDocumentReportOnTheChaptersMeetingRecipe
+  result: PrintedDocumentReportOnTheChaptersMeeting
   categories:
   - Reports
   completetime: 2
@@ -91,8 +91,8 @@
     SheetPrinter: 100
 
 - type: latheRecipe
-  id: PrintedDocumentObjectExaminationReportRecipe
-  result: PrintedDocumentObjectExaminationReport
+  id: PrintedDocumentObjectInvestigationReportRecipe
+  result: PrintedDocumentObjectInvestigationReport
   categories:
   - Reports
   completetime: 2
@@ -153,8 +153,8 @@
 # Statements
 
 - type: latheRecipe
-  id: PrintedDocumentStatementInterimAppointmentRecipe
-  result: PrintedDocumentStatementInterimAppointment
+  id: PrintedDocumentStatementAppointmentInterimChapterRecipe
+  result: PrintedDocumentStatementAppointmentInterimChapter
   categories:
   - Statements
   completetime: 2
@@ -163,10 +163,10 @@
     SheetPrinter: 100
 
 - type: latheRecipe
-  id: PrintedDocumentEmploymentContractRecipe
-  result: PrintedDocumentEmploymentContract
+  id: PrintedDocumentEmploymentStatementRecipe
+  result: PrintedDocumentEmploymentStatement
   categories:
-  - InquiriesAndAppeals
+  - Statements
   completetime: 2
   applyMaterialDiscount: false
   materials:
@@ -183,20 +183,20 @@
     SheetPrinter: 100
 
 - type: latheRecipe
-  id: PrintedDocumentAccessRequestRecipe
-  result: PrintedDocumentAccessRequest
+  id: PrintedDocumentAccessRequestStatementRecipe
+  result: PrintedDocumentAccessRequestStatement
   categories:
-  - InquiriesAndAppeals
+  - Statements
   completetime: 2
   applyMaterialDiscount: false
   materials:
     SheetPrinter: 100
 
 - type: latheRecipe
-  id: PrintedDocumentEquipmentRequestRecipe
-  result: PrintedDocumentEquipmentRequest
+  id: PrintedDocumentEquipmentRequestStatementRecipe
+  result: PrintedDocumentEquipmentRequestStatement
   categories:
-  - InquiriesAndAppeals
+  - Statements
   completetime: 2
   applyMaterialDiscount: false
   materials:
@@ -255,8 +255,8 @@
     SheetPrinter: 100
 
 - type: latheRecipe
-  id: PrintedDocumentRequestSalaryModificationRecipe
-  result: PrintedDocumentRequestSalaryModification
+  id: PrintedDocumentRequestChangeSalaryRecipe
+  result: PrintedDocumentRequestChangeSalary
   categories:
   - InquiriesAndAppeals
   completetime: 2
@@ -357,8 +357,8 @@
     SheetPrinter: 100
 
 - type: latheRecipe
-  id: PrintedDocumentCriminalComplaintRecipe
-  result: PrintedDocumentCriminalComplaint
+  id: PrintedDocumentComplaintOffenseRecipe
+  result: PrintedDocumentComplaintOffense
   categories:
   - Complaints
   completetime: 2
@@ -409,8 +409,8 @@
     SheetPrinter: 100
 
 - type: latheRecipe
-  id: PrintedDocumentSearchWarrantRecipe
-  result: PrintedDocumentSearchWarrant
+  id: PrintedDocumentSearchPermissionRecipe
+  result: PrintedDocumentSearchPermission
   categories:
   - Permissions
   completetime: 2
@@ -420,8 +420,8 @@
 
 
 - type: latheRecipe
-  id: PrintedDocumentBodyDisposalPermitRecipe
-  result: PrintedDocumentBodyDisposalPermit
+  id: PrintedDocumentPermissionDisposeBodyRecipe
+  result: PrintedDocumentPermissionDisposeBody
   categories:
   - Permissions
   completetime: 2
@@ -440,8 +440,8 @@
     SheetPrinter: 100
 
 - type: latheRecipe
-  id: PrintedDocumentSurgeryConsentFormRecipe
-  result: PrintedDocumentSurgeryConsentForm
+  id: PrintedDocumentSurgeryConsentPermitRecipe
+  result: PrintedDocumentSurgeryConsentPermit
   categories:
   - Permissions
   completetime: 2

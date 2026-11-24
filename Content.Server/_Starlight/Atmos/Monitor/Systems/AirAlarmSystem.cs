@@ -61,7 +61,6 @@ public sealed partial class AirAlarmSystem
         Components = [
             "AirAlarm",
             "FireAlarm",
-            "GasPipeSensor",
         ]
     };
 

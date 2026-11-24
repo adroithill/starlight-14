@@ -30,11 +30,7 @@ internal static class PopOutHelper
     /// Moves <paramref name="content"/> into a real desktop window and shows it. The same controls
     /// are moved over so nothing loses its state.
     /// </summary>
-    /// <param name="cancelClose">
-    /// Asked when the player closes the desktop window; returning true keeps it open,
-    /// such as while unsaved changes are being asked about.
-    /// </param>
-    public static OSWindow Show(string title, Vector2 size, Control content, Action onClosed, Func<bool>? cancelClose = null)
+    public static OSWindow Show(string title, Vector2 size, Control content, Action onClosed)
     {
         // Use the plain size, not pixel size: the engine scales it for us, so passing pixels would
         // make the window too big on zoomed-in monitors.
@@ -45,14 +41,6 @@ internal static class PopOutHelper
         };
 
         window.Closed += onClosed;
-        if (cancelClose != null)
-        {
-            window.Closing += args =>
-            {
-                if (cancelClose())
-                    args.Cancel = true;
-            };
-        }
 
         var panel = new PanelContainer
         {

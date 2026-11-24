@@ -93,13 +93,7 @@
             - material: WoodPlank
               amount: 1
               doAfter: 1
-        # Starlight Start
-        - to: TableXeno
-          steps:
-            - material: Chitin
-              amount: 1
-              doAfter: 1
-        # Starlight End
+
 
     - node: CounterWoodFrame
       entity: CounterWoodFrame
@@ -452,7 +446,7 @@
       - to: TableFrame
         completed:
         - !type:SpawnPrototype
-          prototype: SheetChitin1 #Starlight Edit
+          prototype: SheetSteel1
           amount: 1
         steps:
         - tool: Anchoring

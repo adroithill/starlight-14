@@ -45,9 +45,8 @@ public abstract partial class SharedFlashSystem : EntitySystem
     [Dependency] private UseDelaySystem _useDelay = default!;
     [Dependency] private IRobustRandom _rand = default!;
 
-    [Dependency] private EntityQuery<StatusEffectsComponent> _statusEffectsQuery = default!;
-    [Dependency] private EntityQuery<DamagedByFlashingComponent> _damagedByFlashingQuery = default!;
-
+    private EntityQuery<StatusEffectsComponent> _statusEffectsQuery;
+    private EntityQuery<DamagedByFlashingComponent> _damagedByFlashingQuery;
     private HashSet<EntityUid> _entSet = new();
 
     // The tag to add when a flash has no charges left.
@@ -69,6 +68,8 @@ public abstract partial class SharedFlashSystem : EntitySystem
         SubscribeLocalEvent<FlashImmunityComponent, ExaminedEvent>(OnExamine);
         SubscribeLocalEvent<FlashComponent, MapInitEvent>(OnFlashMapInit); // Starlight
 
+        _statusEffectsQuery = GetEntityQuery<StatusEffectsComponent>();
+        _damagedByFlashingQuery = GetEntityQuery<DamagedByFlashingComponent>();
     }
 
     // Moffstation - Start

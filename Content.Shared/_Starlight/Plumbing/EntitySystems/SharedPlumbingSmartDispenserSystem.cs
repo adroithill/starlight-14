@@ -1,5 +1,4 @@
 using Content.Shared._Starlight.Chemistry.Components;
-using Content.Shared._Starlight.Computers.RemoteControl;
 using Content.Shared._Starlight.Plumbing.Components;
 using Content.Shared.Access.Systems;
 using Content.Shared.ActionBlocker;
@@ -123,18 +122,17 @@ public abstract partial class SharedPlumbingSmartDispenserSystem : EntitySystem
         if (args.Actor is not { Valid: true } actor)
             return;
 
-        var uiActor = GetUiInteractionActor(ent, actor, args.UiKey);
-        if (GetBoundLabeler(uiActor, args.TargetEntity) is Entity<HandLabelerComponent> labeler)
+        if (GetBoundLabeler(actor, args.TargetEntity) is Entity<HandLabelerComponent> labeler)
         {
-            SetReagentLabel(ent, args.ReagentId, labeler.Comp.AssignedLabel, uiActor);
+            SetReagentLabel(ent, args.ReagentId, labeler.Comp.AssignedLabel, actor);
             UpdateUi(ent);
             return;
         }
 
-        var outputContainer = GetBoundContainer(uiActor, args.TargetEntity);
+        var outputContainer = GetBoundContainer(actor, args.TargetEntity);
         if (outputContainer is not { } targetContainer)
         {
-            _popup.PopupPredicted(Loc.GetString("plumbing-smart-dispenser-no-container"), ent.Owner, uiActor);
+            _popup.PopupPredicted(Loc.GetString("plumbing-smart-dispenser-no-container"), ent.Owner, actor);
             UpdateUi(ent);
 
             return;
@@ -145,7 +143,7 @@ public abstract partial class SharedPlumbingSmartDispenserSystem : EntitySystem
             args.ReagentId,
             targetContainer,
             args.Amount,
-            uiActor,
+            actor,
             true);
 
         UpdateUi(ent);
@@ -156,11 +154,10 @@ public abstract partial class SharedPlumbingSmartDispenserSystem : EntitySystem
         if (args.Actor is not { Valid: true } actor)
             return;
 
-        var uiActor = GetUiInteractionActor(ent, actor, args.UiKey);
-        if (!CanInteract(ent, uiActor))
+        if (!CanInteract(ent, actor))
             return;
 
-        var outputContainer = GetBoundContainer(uiActor, args.TargetEntity);
+        var outputContainer = GetBoundContainer(actor, args.TargetEntity);
         if (outputContainer is not { } targetContainer)
             return;
 
@@ -173,13 +170,6 @@ public abstract partial class SharedPlumbingSmartDispenserSystem : EntitySystem
 
         _solutionSystem.RemoveAllSolution(targetEnt.Value);
         UpdateUi(ent);
-    }
-
-    private EntityUid GetUiInteractionActor(Entity<PlumbingSmartDispenserComponent> ent, EntityUid actor, Enum uiKey)
-    {
-        var ev = new RemoteControlUiInteractionActorEvent(actor, ent.Owner, uiKey, false);
-        RaiseLocalEvent(ref ev);
-        return ev.Actor ?? actor;
     }
 
     /// <summary>

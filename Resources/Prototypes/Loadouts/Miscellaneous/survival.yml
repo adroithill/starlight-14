@@ -40,7 +40,6 @@
     - NeoLagomorph # Starlight
     - Neocyte # Far Horizons + Starlight
     - Experiment #🌟Starlight🌟
-    - Xeno #🌟Starlight🌟
 
 - type: loadoutEffectGroup
   id: EffectSpeciesVox
@@ -97,7 +96,6 @@
     - Human
     - Reptilian
     - Vulpkanin
-    - Xeno #Starlight
 
 - type: loadoutEffectGroup
   id: OxygenBreatherMimeMoth

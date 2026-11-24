@@ -1,5 +1,0 @@
-- type: !PartialOnly entity
-  id: BaseRockGibtonite
-  components:
-  - type: Explosive
-    adminLogImpact: Medium

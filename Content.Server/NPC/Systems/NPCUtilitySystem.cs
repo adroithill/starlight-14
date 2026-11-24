@@ -33,14 +33,11 @@ using Content.Shared.Atmos.Components;
 using System.Linq;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
-using Content.Shared.Mobs.Components;
 using Content.Shared.Temperature.Components;
 using Content.Server._Starlight.NPC.Queries.Considerations;
 using Content.Server._Starlight.NPC.Systems;
 using Content.Shared.Projectiles;
 using Content.Shared.Tag; // Persistence: Firebots can target reagent fires
-using Content.Shared.Stealth;
-using Content.Shared.Stealth.Components;
 
 namespace Content.Server.NPC.Systems;
 
@@ -68,7 +65,6 @@ public sealed partial class NPCUtilitySystem : EntitySystem
     [Dependency] private TurretTargetSettingsSystem _turretTargetSettings = default!;
     [Dependency] private DamageableSystem _damageable = default!;
     [Dependency] private NPCHidingWitnessSystem _hidingWitness = default!; // Starlight
-    [Dependency] private SharedStealthSystem _stealth = default!;
 
     private EntityQuery<PuddleComponent> _puddleQuery;
     private EntityQuery<FootprintComponent> _footprintQuery; // Starlight-edit
@@ -309,15 +305,6 @@ public sealed partial class NPCUtilitySystem : EntitySystem
 
                 return Math.Clamp(distance / radius, 0f, 1f);
             }
-            case TargetIsVisibleCon:
-            {
-                if (!TryComp(targetUid, out StealthComponent? stealth))
-                    return 1f; // If there is no StealthComponent, we see it.
-
-                // Checking the visibility level
-                var visibility = _stealth.GetVisibility(targetUid, stealth);
-                return visibility >= 0.5f ? 1f : 0f; // Visibility threshold 0.5
-            }
             case TargetAmmoCon:
             {
                 if (!HasComp<GunComponent>(targetUid))
@@ -337,13 +324,12 @@ public sealed partial class NPCUtilitySystem : EntitySystem
             }
             case TargetHealthCon con:
             {
-                if (!TryComp(targetUid, out DamageableComponent? damage) || !TryComp(targetUid, out MobThresholdsComponent? threshold))
+                if (!TryComp(targetUid, out DamageableComponent? damage))
                     return 0f;
-
                 var totalDamage = _damageable.GetTotalDamage((targetUid, damage));
-                if (con.TargetState != MobState.Invalid && _thresholdSystem.TryGetPercentageForState(targetUid, con.TargetState, totalDamage, out var percentage, threshold))
+                if (con.TargetState != MobState.Invalid && _thresholdSystem.TryGetPercentageForState(targetUid, con.TargetState, totalDamage, out var percentage))
                     return Math.Clamp((float)(1 - percentage), 0f, 1f);
-                if (_thresholdSystem.TryGetIncapPercentage(targetUid, totalDamage, out var incapPercentage, threshold))
+                if (_thresholdSystem.TryGetIncapPercentage(targetUid, totalDamage, out var incapPercentage))
                     return Math.Clamp((float)(1 - incapPercentage), 0f, 1f);
                 return 0f;
             }

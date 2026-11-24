@@ -9,7 +9,6 @@ using Content.Shared.Popups;
 using Content.Shared.PowerCell;
 using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Timing;
 using HandheldTranslatorComponent = Content.Shared._Starlight.Language.Components.HandheldTranslatorComponent;
 
 namespace Content.Shared._Starlight.Language.Systems;
@@ -22,7 +21,6 @@ public sealed partial class TranslatorSystem : EntitySystem
     [Dependency] private SharedLanguageSystem _language = default!;
     [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private PowerCellSystem _powerCell = default!;
-    [Dependency] private IGameTiming _timing = default!;
 
     public override void Initialize()
     {
@@ -70,9 +68,6 @@ public sealed partial class TranslatorSystem : EntitySystem
 
     private void OnTranslatorInserted(Entity<HandheldTranslatorComponent> ent, ref EntGotInsertedIntoContainerMessage args)
     {
-        if (_timing.ApplyingState)
-            return;
-
         if (args.Container.Owner is not { Valid: true } holder || !HasComp<LanguageSpeakerComponent>(holder))
             return;
 
@@ -85,9 +80,7 @@ public sealed partial class TranslatorSystem : EntitySystem
 
     private void OnTranslatorParentChanged(Entity<HandheldTranslatorComponent> ent, ref EntParentChangedMessage args)
     {
-        if (_timing.ApplyingState 
-            || !HasComp<HoldsTranslatorComponent>(args.OldParent) 
-            || TerminatingOrDeleted(args.OldParent.Value))
+        if (!HasComp<HoldsTranslatorComponent>(args.OldParent))
             return;
 
         // Update the translator on the next tick - this is necessary because there's a good chance the removal from a container.

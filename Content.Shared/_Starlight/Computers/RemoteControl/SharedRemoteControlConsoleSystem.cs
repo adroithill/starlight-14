@@ -3,7 +3,6 @@ using Content.Shared.Body.Organ;
 using Content.Shared.Interaction;
 using Content.Shared.Movement.Components;
 using Content.Shared.Silicons.Borgs.Components;
-using Content.Shared._Starlight.Access;
 using Robust.Shared.Containers;
 
 // ReSharper disable CheckNamespace
@@ -16,6 +15,12 @@ public sealed partial class SharedRemoteControlConsoleSystem : EntitySystem
     [Dependency] private SharedInteractionSystem _interaction = default!;
     [Dependency] private ActionBlockerSystem _actionBlocker = default!;
     [Dependency] private SharedUserInterfaceSystem _ui = default!;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        SubscribeLocalEvent<RemoteControlInteractionCheckEvent>(OnRemoteControlInteractionCheck);
+    }
 
     /// <summary>
     /// Gets the remote entity controlled by an actor.
@@ -73,7 +78,7 @@ public sealed partial class SharedRemoteControlConsoleSystem : EntitySystem
     /// </returns>
     public bool CanRemoteControlledEntityAct(EntityUid remoteEntity)
         => _actionBlocker.CanConsciouslyPerformAction(remoteEntity);
-    [SubscribeLocalEvent]
+
     private void OnRemoteControlInteractionCheck(ref RemoteControlInteractionCheckEvent args)
     {
         if (!TryGetControlledEntity(args.Actor, out var remoteEntity))
@@ -85,25 +90,15 @@ public sealed partial class SharedRemoteControlConsoleSystem : EntitySystem
     }
 
     [SubscribeLocalEvent]
-    private void OnBorgAccessRead(EntityUid uid, BorgChassisComponent component, ref AccessReadEvent args)
-    {
-        if (TryGetControllerForRemoteEntity(uid, out var controller) && controller != uid)
-            args.AccessSource = controller;
-    }
-
-    [SubscribeLocalEvent]
     private void OnRemoteUiInteractionActor(ref RemoteControlUiInteractionActorEvent args)
     {
         if (!TryGetControlledEntity(args.Controller, out var remoteEntity)
-            || !CanRemoteControlledEntityAct(remoteEntity))
-            return;
-
-        if (!args.IsOpenAttempt
-            && args.Target != remoteEntity
-            && !_ui.IsUiOpen(args.Target, args.UiKey, remoteEntity))
-            return;
-
-        if (!_interaction.IsAccessible(remoteEntity, args.Target))
+            || !CanRemoteControlledEntityAct(remoteEntity)
+            || (!args.IsOpenAttempt
+                && args.Target != remoteEntity
+                && !_ui.IsUiOpen(args.Target, args.UiKey, remoteEntity)
+                && !_ui.IsUiOpen(args.Target, args.UiKey, args.Controller))
+            || !_interaction.IsAccessible(remoteEntity, args.Target))
             return;
 
         args.Actor = remoteEntity;

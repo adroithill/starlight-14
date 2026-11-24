@@ -13,7 +13,6 @@
     - SpaceTrafficControlEventScheduler
     - ThiefGamerule
     - BasicRoundstartVariation
-    - XenoDemocracy
 
 - type: gamePreset
   id: SubXenoborgs
@@ -31,10 +30,8 @@
   - SubGamemodesRuleNoXenoborg # No two motherships. Allows wizards to spawn on Xenoborgs. Space is dangerous, yo.
   - BasicStationEventScheduler
   - MeteorSwarmScheduler
-  - WireCutScheduler
   - SpaceTrafficControlEventScheduler
   - BasicRoundstartVariation
-  - XenoDemocracy
 
 - type: gamePreset
   id: ShitStation
@@ -52,14 +49,12 @@
     - BasicStationEventScheduler
     - BasicStationEventScheduler # More events without ramping events. What could go wrong?
     - MeteorSwarmMildScheduler
-    - WireCutScheduler
     - SubGamemodesRule
     - BasicRoundstartVariation
     - BasicRoundstartVariation
     - BasicRoundstartVariation
     - BasicRoundstartVariation
     - BasicRoundstartVariation
-    - XenoDemocracy
 
 - type: gamePreset
   id: Vampire
@@ -77,9 +72,7 @@
   - SubGamemodesRuleNoVampires
   - BasicStationEventScheduler
   - MeteorSwarmScheduler
-  - WireCutScheduler
   - BasicRoundstartVariation
-  - XenoDemocracy
 
 - type: gamePreset
   id: Changeling
@@ -96,9 +89,7 @@
     - SLChangelingLess
     - SubGamemodesRuleNoChangelings
     - BasicStationEventScheduler
-    - WireCutScheduler
     - BasicRoundstartVariation
-    - XenoDemocracy
 
 - type: gamePreset
   id: Traitorling
@@ -114,9 +105,7 @@
     - Traitor
     - SubGamemodesRuleNoChangelings
     - BasicStationEventScheduler
-    - WireCutScheduler
     - BasicRoundstartVariation
-    - XenoDemocracy
 
 - type: gamePreset
   id: Vamptraitorling
@@ -137,9 +126,7 @@
     - VampireLess
     - SubGamemodesRuleVampTraitorLing
     - BasicStationEventScheduler
-    - WireCutScheduler
     - BasicRoundstartVariation
-    - XenoDemocracy
 
 - type: gamePreset
   id: AlmostAllAtOnce
@@ -159,7 +146,6 @@
     - WizardDuel
     #- Xenoborgs
     - RampingStationEventScheduler
-    - WireCutScheduler
     - SLChangeling
     - SpaceTrafficControlEventScheduler
     - BasicRoundstartVariation
@@ -171,7 +157,6 @@
     - ThiefGamerule
     - BloodBound
     - CosmicCult
-    - XenoDemocracy
     - Devil
 
 - type: gamePreset
@@ -197,7 +182,6 @@
     - BasicStationEventScheduler
     - ShitStationEventScheduler
     - MeteorSwarmScheduler # Meteor mild isn't included in almost aller because in theory the idea is to have a round last more than 10 minutes.
-    - WireCutScheduler
     - RampingStationEventScheduler
     - SpaceTrafficControlEventScheduler
     - SpaceTrafficControlFriendlyEventScheduler
@@ -217,7 +201,6 @@
     - Devil
     - BloodBound
     - CosmicCult
-    - XenoDemocracy
 
 - type: gamePreset
   id: CosmicCult
@@ -231,7 +214,6 @@
     - CosmicCult
     - SubGamemodesRuleConversion
     - MeteorSwarmScheduler
-    - WireCutScheduler
     - SpaceTrafficControlEventScheduler
     - BasicRoundstartVariation
     - BasicStationEventScheduler
@@ -253,11 +235,9 @@
   - SubGamemodesRuleNoChangelings
   - BasicStationEventScheduler
   - MeteorSwarmScheduler
-  - WireCutScheduler
   - SpaceTrafficControlEventScheduler
   - BasicRoundstartVariation
   - RailroadingMinor # 🌟Starlight🌟
-  - XenoDemocracy
 
 - type: gamePreset
   id: DynamicLP
@@ -275,4 +255,3 @@
   - SpaceTrafficControlEventScheduler # No event/meteor schedulers, since we handle that in dynamic too.
   - BasicRoundstartVariation
   - RailroadingMinor
-  - XenoDemocracy

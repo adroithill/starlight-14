@@ -10,20 +10,9 @@
 # Neck
 
 - type: loadout
-  id: ClothingNeckWardenCloak
+  id: ClothingNeckWarden
   equipment:
     neck: ClothingNeckCloakwarden
-
-- type: loadout
-  id: ClothingNeckWardenMantle
-  effects:
-  - !type:JobRequirementLoadoutEffect
-    requirement:
-      !type:RoleTimeRequirement
-      role: JobWarden
-      time: 108000 # 30 hrs
-  equipment:
-    neck: ClothingNeckMantlewarden
 
 # Formal Jumpsuits
 

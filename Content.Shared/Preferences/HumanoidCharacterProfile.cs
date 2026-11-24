@@ -771,14 +771,10 @@ namespace Content.Shared.Preferences
         {
             // Track points count for each group.
             var groups = new Dictionary<string, int>();
-            // Starlight start
-            var traitList = traits.ToList();
-            var valid = new bool[traitList.Count];
+            var result = new List<ProtoId<TraitPrototype>>();
 
-            foreach (var index in TraitOrdering.OrderForValidation(Enumerable.Range(0, traitList.Count), i => traitList[i], protoManager))
+            foreach (var trait in traits)
             {
-                var trait = traitList[index];
-                // Starlight end
                 if (!protoManager.TryIndex(trait, out var traitProto))
                     continue;
 
@@ -801,16 +797,7 @@ namespace Content.Shared.Preferences
                     continue;
 
                 groups[category.ID] = existing;
-                valid[index] = true; // Starlight
-            }
-
-            // Starlight-start
-            var result = new List<ProtoId<TraitPrototype>>();
-            for (var i = 0; i < traitList.Count; i++)
-            {
-                if (valid[i])
-                    result.Add(traitList[i]);
-            // Starlight-end
+                result.Add(trait);
             }
 
             return result;

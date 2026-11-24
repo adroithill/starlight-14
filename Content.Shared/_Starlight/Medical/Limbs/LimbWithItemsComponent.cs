@@ -30,7 +30,4 @@ public sealed partial class LimbItemDeployerComponent  : Component, IWithAction
 
     [DataField]
     public bool IsCybernetic = true;
-
-    [DataField]
-    public bool BlockedByCuffs = false;
 }

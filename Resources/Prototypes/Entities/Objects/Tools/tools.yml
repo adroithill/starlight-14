@@ -379,10 +379,6 @@
     #Starlight start
     - FirelockEdge
     - LightPostSmall
-    - AirlockCycler # Starlight
-    - AirlockCyclerButton # Starlight
-    - EmergencyLight # Starlight
-    - FloorLight # Starlight
     #Starlight end
   - type: LimitedCharges
     maxCharges: 30

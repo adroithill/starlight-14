@@ -65,7 +65,7 @@ public sealed partial class CharacterPickerButton : ContainerButton
             View.LoadPreview(profile);
 
             EnabledCheck.Pressed = profile.Enabled;
-            UpdateEnabledIcon(profile.Enabled); // Starlight-edit
+            EnabledCheck.Text = Loc.GetString(profile.Enabled ? EnabledLoc : DisabledLoc);
 
             Pressed = isSelected;
 
@@ -102,7 +102,7 @@ public sealed partial class CharacterPickerButton : ContainerButton
                 EnabledCheck.OnToggled += args =>
                 {
                     OnEnableToggled?.Invoke(args.Pressed);
-                    UpdateEnabledIcon(args.Pressed); // Starlight-edit
+                    EnabledCheck.Text = Loc.GetString(profile.Enabled ? EnabledLoc : DisabledLoc);
                 };
             }
         }

@@ -105,9 +105,8 @@ namespace Content.Client._Starlight.Lobby.UI
             _allowExploitables = _cfgManager.GetCVar(StarlightCCVars.ExploitableSecrets);
             _allowRPNotes = _cfgManager.GetCVar(StarlightCCVars.OOCNotes);
 
-            // Starlight-edit: hidden through the tab container, setting Visible would draw them over the tab bar
-            TabContainer.SetTabVisible(OOCInfoTab, _allowRPNotes);
-            TabContainer.SetTabVisible(ICInfoTab, _allowFlavorText || _allowExploitables || _allowCharacterSecrets);
+            OOCInfoTab.Visible = _allowRPNotes;
+            ICInfoTab.Visible = _allowFlavorText || _allowExploitables || _allowCharacterSecrets;
 
             ImportButton.OnPressed += _ => ImportProfile();
             ExportButton.OnPressed += _ => ExportProfile();
@@ -120,15 +119,12 @@ namespace Content.Client._Starlight.Lobby.UI
 
             Antags.OnAntagsChanged += OnAntagsSelectionChanged;
             Antags.OnLoadoutPressed += OnAntagLoadoutPressed;
-            Antags.OnPreviewChanged += PreviewAntag; // Starlight
-            JobSearch.OnTextChanged += _ => FilterJobs(); // Starlight
 
             NameEdit.OnTextChanged += args => SetName(args.Text);
             NameEdit.IsValid = args => args.Length <= _maxNameLength;
             NameRandomize.OnPressed += _ => RandomizeName();
             RandomizeEverythingButton.OnPressed += _ => RandomizeEverything();
-            NameRulesHint.ToolTip = Loc.GetString("humanoid-profile-editor-naming-rules-warning"); // Starlight-edit
-            MoreButton.SetContent(MoreActions); // Starlight
+            WarningLabel.SetMarkup($"[color=red]{Loc.GetString("humanoid-profile-editor-naming-rules-warning")}[/color]");
 
             CCustomSpecieNameEdit.OnTextChanged += args => SetCustomSpecieName(args.Text);
 
@@ -161,6 +157,8 @@ namespace Content.Client._Starlight.Lobby.UI
             {
                 SpeciesButton.SelectId(args.Id);
                 SetSpecies(_species[args.Id].ID);
+                UpdateHairPickers();
+                OnSkinColorOnValueChanged();
                 UpdateCustomSpecieNameEdit();
             };
 
@@ -169,6 +167,7 @@ namespace Content.Client._Starlight.Lobby.UI
             {
                 SubspeciesButton.SelectId(args.Id);
                 SetSpecies(_subspecies[args.Id].ID);
+                UpdateHairPickers();
                 UpdateCustomSpecieNameEdit();
             };
 
@@ -176,19 +175,6 @@ namespace Content.Client._Starlight.Lobby.UI
 
             WidthSlider.OnValueChanged += args => SetCharacterWidth(args.Value);
             HeightSlider.OnValueChanged += args => SetCharacterHeight(args.Value);
-            // Enter applies and lets go of the box, which applies once more on focus exit: harmless, same value.
-            HeightEdit.OnTextEntered += args =>
-            {
-                OnHeightEntered(args.Text);
-                HeightEdit.ReleaseKeyboardFocus();
-            };
-            HeightEdit.OnFocusExit += args => OnHeightEntered(args.Text);
-            WeightEdit.OnTextEntered += args =>
-            {
-                OnWeightEntered(args.Text);
-                WeightEdit.ReleaseKeyboardFocus();
-            };
-            WeightEdit.OnFocusExit += args => OnWeightEntered(args.Text);
 
             WidthResetButton.OnPressed += _ =>
             {
@@ -208,6 +194,138 @@ namespace Content.Client._Starlight.Lobby.UI
                     HeightSlider.Value = speciesPrototype.DefaultHeight;
             };
 
+            Skin.OnValueChanged += _ => OnSkinColorOnValueChanged();
+
+            RgbSkinColorContainer.AddChild(_rgbSkinColorSelector = new ColorSelectorSliders());
+            _rgbSkinColorSelector.SelectorType = ColorSelectorSliders.ColorSelectorType.Hsv;
+            _rgbSkinColorSelector.OnColorChanged += _ => OnSkinColorOnValueChanged();
+
+            HairStylePicker.OnMarkingSelect += newStyle =>
+            {
+                if (Profile is null)
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithHairStyleName(newStyle.id));
+                ReloadPreview();
+            };
+
+            HairStylePicker.OnColorChanged += newColor =>
+            {
+                if (Profile is null)
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithHairColor(newColor.marking.MarkingColors[0]));
+                UpdateCMarkingsHair();
+                ReloadPreview();
+            };
+
+            HairStylePicker.OnGlowingChanged += newColor =>
+            {
+                if (Profile is null)
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithHairGlowing(newColor.marking.IsGlowing));
+                UpdateCMarkingsHair();
+                ReloadPreview();
+            };
+
+            FacialHairPicker.OnMarkingSelect += newStyle =>
+            {
+                if (Profile is null)
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithFacialHairStyleName(newStyle.id));
+                ReloadPreview();
+            };
+
+            FacialHairPicker.OnColorChanged += newColor =>
+            {
+                if (Profile is null)
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithFacialHairColor(newColor.marking.MarkingColors[0]));
+                UpdateCMarkingsFacialHair();
+                ReloadPreview();
+            };
+
+            FacialHairPicker.OnGlowingChanged += newColor =>
+            {
+                if (Profile is null)
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithFacialHairGlowing(newColor.marking.IsGlowing));
+                UpdateCMarkingsFacialHair();
+                ReloadPreview();
+            };
+
+            HairStylePicker.OnSlotRemove += _ =>
+            {
+                if (Profile is null)
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithHairStyleName(HairStyles.DefaultHairStyle));
+                UpdateHairPickers();
+                UpdateCMarkingsHair();
+                ReloadPreview();
+            };
+
+            FacialHairPicker.OnSlotRemove += _ =>
+            {
+                if (Profile is null)
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithFacialHairStyleName(HairStyles.DefaultFacialHairStyle));
+                UpdateHairPickers();
+                UpdateCMarkingsFacialHair();
+                ReloadPreview();
+            };
+
+            HairStylePicker.OnSlotAdd += delegate
+            {
+                if (Profile is null)
+                    return;
+
+                var hair = _markingManager.MarkingsByCategoryAndSpecies(MarkingCategories.Hair, Profile.Species).Keys
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(hair))
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithHairStyleName(hair));
+
+                UpdateHairPickers();
+                UpdateCMarkingsHair();
+                ReloadPreview();
+            };
+
+            FacialHairPicker.OnSlotAdd += delegate
+            {
+                if (Profile is null)
+                    return;
+
+                var hair = _markingManager.MarkingsByCategoryAndSpecies(MarkingCategories.FacialHair, Profile.Species).Keys
+                    .FirstOrDefault();
+
+                if (string.IsNullOrEmpty(hair))
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(
+                    Profile.Appearance.WithFacialHairStyleName(hair));
+
+                UpdateHairPickers();
+                UpdateCMarkingsFacialHair();
+                ReloadPreview();
+            };
+
             foreach (var value in Enum.GetValues<SpawnPriorityPreference>())
             {
                 SpawnPriorityButton.AddItem(
@@ -221,8 +339,33 @@ namespace Content.Client._Starlight.Lobby.UI
                 SetSpawnPriority((SpawnPriorityPreference) args.Id);
             };
 
+            EyeColorPicker.OnEyeColorPicked += newColor =>
+            {
+                if (Profile is null)
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(Profile.Appearance.WithEyeColor(newColor));
+                Markings.CurrentEyeColor = Profile.Appearance.EyeColor;
+                ReloadProfilePreview();
+            };
+
+            EyeColorPicker.OnGlowingChanged += newGlow =>
+            {
+                if (Profile is null)
+                    return;
+
+                Profile = Profile.WithCharacterAppearance(Profile.Appearance.WithEyeGlowing(newGlow));
+                Markings.CurrentEyeColor = Profile.Appearance.EyeColor;
+                ReloadProfilePreview();
+            };
+
             RefreshAntags();
             RefreshJobs();
+
+            Markings.OnMarkingAdded += OnMarkingChange;
+            Markings.OnMarkingRemoved += OnMarkingChange;
+            Markings.OnMarkingColorChange += OnMarkingChange;
+            Markings.OnMarkingRankChange += OnMarkingChange;
 
             Cybernetics.OnCyberneticsUpdated += OnCyberneticsUpdated;
 
@@ -241,12 +384,11 @@ namespace Content.Client._Starlight.Lobby.UI
             };
 
             ShowClothes.OnToggled += _ => ReloadPreview();
-            SpeciesButton.OnGuidebookRequested += id => OpenSpeciesGuidebook(_species[id]);
+            SpeciesInfoButton.OnPressed += OnSpeciesInfoButtonPressed;
 
+            UpdateSpeciesGuidebookIcon();
             InitializeVoiceSelectors();
             SetupTabs();
-            InitializeBodyTab(); // Starlight
-            InitializeLoadoutTab(); // Starlight
             _recordsTab = CreateRecordEditorTab();
             SetupInfoEditors();
             RefreshCharacterInfo();
@@ -269,8 +411,7 @@ namespace Content.Client._Starlight.Lobby.UI
             if (Profile == null)
                 return;
 
-            SpriteView.LoadPreview(Profile, JobOverride, ShowClothes.Pressed && !BodyTabVisible, AntagOverride); // Starlight-edit
-            BodyTab.SetPreviewEntity(SpriteView.PreviewDummy); // Starlight
+            SpriteView.LoadPreview(Profile, JobOverride, ShowClothes.Pressed);
             SetDirty();
         }
 
@@ -295,10 +436,15 @@ namespace Content.Client._Starlight.Lobby.UI
             UpdateSexControls();
             UpdateGenderControls();
             UpdateSizeControls();
+            UpdateSkinColor();
             UpdateSpawnPriorityControls();
             UpdateAgeEdit();
+            UpdateEyePickers();
             UpdateSaveButton();
-            UpdateBodyTab(); // Starlight
+            UpdateMarkings();
+            UpdateHairPickers();
+            UpdateCMarkingsHair();
+            UpdateCMarkingsFacialHair();
             UpdateVoicesControls();
             UpdateSiliconVoicesControls();
             UpdateCybernetics();
@@ -340,6 +486,8 @@ namespace Content.Client._Starlight.Lobby.UI
             if (!disposing)
                 return;
 
+            _loadoutWindow?.Dispose();
+            _loadoutWindow = null;
         }
 
         protected override void EnteredTree()

@@ -100,14 +100,3 @@
     electrify: true
   - !type:LogWireAction
   dummyWires: 2
-
-- type: wireLayout
-  id: Firelock
-  dummyWires: 2
-  wires:
-    - !type:PowerWireAction
-    - !type:PowerWireAction
-      pulseTimeout: 15
-    - !type:AccessWireAction
-    - !type:FirelockHeatAlertAction
-    - !type:FirelockAirAlertAction

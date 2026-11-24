@@ -16,27 +16,6 @@
       weight: 0.75
     - id: CDAdvertBecomeSilicon # Overlord advert should be rarer.
       weight: 0.5
-    - id: CDAdvertDonkPockets
-    - id: CDAdvertGreybull
-    - id: CDAdvertJoinCargonia
-    - id: CDAdvertJoinEngineering
-    - id: CDAdvertJoinMedical
-    - id: CDAdvertJoinSecurity
-    - id: CDAdvertJoinTheJanitors
-    - id: CDAdvertJoinScienceTeam
-    - id: CDAdvertMagmale
-    - id: CDAdvertUncleGits
-    - id: CDAdvertDiscountDans
-    - id: CDAdvertSpeakerSecurityPSA
-    - id: CDAdvertInspector
-    - id: CDAdvertJoinBotany
-    - id: CDAdvertKammerer
-    - id: CDAdvertMimeFromBehind
-    - id: CDAdvertMosinNagant
-    - id: CDAdvertNomads
-    - id: CDAdvertNTClownCollege
-    - id: CDAdvertSinguloTek
-    - id: CDAdvertTOOB
     - id: CDMiscDuck # Stupid duck noises.
       weight: 0.3
     - id: CDJNEShow # JNE Show should be super rare.
@@ -104,7 +83,7 @@
     - id: VinylSleevePride
     - id: VinylSleeveTrans
     - id: VinylSleeveFart # Fart/Clown Songs
-      weight: 0.2
+    weight: 0.2
 
 
 - type: entityTable
@@ -176,7 +155,6 @@
     - id: VinylEphedrineOverdose
     - id: VinylGetThatAntag
     - id: VinylGreytideSong
-    - id: VinylLaw2OpenArmory
     - id: VinylNukiesTrap
     - id: VinylRunningOut
     - id: VinylSponsoredBySyndicate
@@ -184,6 +162,7 @@
     - id: VinylViolet
     - id: VinylPeakAsshole # Space asshole but deep fried.
       weight: 0.05
+    #Starlight-start
     - id: VinylCrazyBot
     - id: VinylD2
     - id: VinylAcidRaindream
@@ -203,7 +182,7 @@
     - id: VinylCryonauseogenesis
     - id: VinylHeartloose
     - id: VinylPlasmaflare
-
+    #Starlight-end
 
 - type: entityTable
   id: RandomVinylDiscFart # Clown/fart songs on their own table.

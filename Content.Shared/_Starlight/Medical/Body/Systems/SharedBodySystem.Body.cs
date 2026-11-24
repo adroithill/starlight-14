@@ -11,8 +11,6 @@ using Robust.Shared.Map;
 using Robust.Shared.Utility;
 using Robust.Shared.Random;
 using Content.Shared._Starlight.Medical.Body.Prototypes;
-using Content.Shared.Humanoid;
-using Content.Shared._Starlight.Medical.Limbs;
 
 // ReSharper disable once CheckNamespace
 namespace Content.Shared.Body.Systems;
@@ -28,7 +26,6 @@ public partial class SharedBodySystem
 
     [Dependency] private InventorySystem _inventory = default!;
     [Dependency] private IRobustRandom _random = default!;
-    [Dependency] private SharedLimbSystem _limb = default!;
 
     private const float GibletLaunchImpulse = 8;
     private const float GibletLaunchImpulseVariance = 3;
@@ -119,10 +116,6 @@ public partial class SharedBodySystem
         var rootPart = Comp<BodyPartComponent>(rootPartUid);
         rootPart.Body = bodyEntity;
         Dirty(rootPartUid, rootPart);
-
-        //Raise surgery events on the torso, if it has special properties
-        if(TryComp(bodyEntity, out HumanoidAppearanceComponent? humanoid))
-            _limb.RaiseLimbAttachedEvent((bodyEntity, humanoid), (rootPartUid, rootPart));
 
         // Setup the rest of the body entities.
         SetupOrgans((rootPartUid, rootPart), protoRoot.Organs);

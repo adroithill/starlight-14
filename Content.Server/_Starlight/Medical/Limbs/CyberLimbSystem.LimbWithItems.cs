@@ -7,13 +7,10 @@ using Content.Shared._Starlight.Cybernetics;
 using Content.Shared._Starlight.Cybernetics.Components;
 using Robust.Shared.Containers;
 using Robust.Shared.Physics.Components;
-using Content.Shared.Cuffs.Components;
-using Content.Shared.Cuffs;
 
 namespace Content.Server._Starlight.Medical.Limbs;
 public sealed partial class CyberLimbSystem : EntitySystem
 {
-    [Dependency] private SharedCuffableSystem _cuffs = default!;
     public void InitializeLimbWithItems()
     {
         SubscribeLocalEvent<LimbItemDeployerComponent, ToggleLimbEvent>(OnLimbToggle);
@@ -39,9 +36,7 @@ public sealed partial class CyberLimbSystem : EntitySystem
         if (!TryComp<LimbItemStorageComponent>(ent, out var storage))
             return;
 
-        ent.Comp.Toggled = !ent.Comp.Toggled
-        && (!ent.Comp.IsCybernetic || !TryComp(args.Performer, out CyberneticDisruptionComponent? _)) //Is the limb cybernetic and are we disrupted?
-        && (!ent.Comp.BlockedByCuffs || !(TryComp<CuffableComponent>(args.Performer, out var cuffable) && _cuffs.IsCuffed((args.Performer, cuffable)))); //Is the limb blocked by cuffs and are we cuffed?
+        ent.Comp.Toggled = !ent.Comp.Toggled && (!ent.Comp.IsCybernetic || !TryComp(args.Performer, out CyberneticDisruptionComponent? _));
 
         if (ent.Comp.Toggled)
         {

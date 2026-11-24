@@ -20,8 +20,8 @@ public abstract partial class SharedMobCollisionSystem : EntitySystem
     [Dependency] protected SharedPhysicsSystem Physics = default!;
     [Dependency] private   SharedTransformSystem _xformSystem = default!;
 
-    [Dependency] protected EntityQuery<MobCollisionComponent> MobQuery = default!;
-    [Dependency] protected EntityQuery<PhysicsComponent> PhysicsQuery = default!;
+    protected EntityQuery<MobCollisionComponent> MobQuery;
+    protected EntityQuery<PhysicsComponent> PhysicsQuery;
 
     /// <summary>
     /// <see cref="CCVars.MovementPushingCap"/>
@@ -64,6 +64,8 @@ public abstract partial class SharedMobCollisionSystem : EntitySystem
             }, true);
         Subs.CVar(CfgManager, CCVars.MovementPushMassCap, val => _massDiffCap = val, true);
 
+        MobQuery = GetEntityQuery<MobCollisionComponent>();
+        PhysicsQuery = GetEntityQuery<PhysicsComponent>();
         SubscribeAllEvent<MobCollisionMessage>(OnCollision);
         SubscribeLocalEvent<MobCollisionComponent, RefreshMovementSpeedModifiersEvent>(OnMoveModifier);
 

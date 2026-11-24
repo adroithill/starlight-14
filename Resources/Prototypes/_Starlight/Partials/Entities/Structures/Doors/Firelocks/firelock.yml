@@ -10,9 +10,3 @@
         gamma: *sec
         delta: *sec
         psi: *sec
-    - type: Wires
-      layoutId: Firelock
-    - type: Door
-      crushPush: true
-      keepClosed: true
-      performCollisionCheck: false

@@ -72,8 +72,6 @@ namespace Content.Shared._Starlight.Humanoid
                     return HumanoidVisualLayers.LFoot;
                 case (BodyPartType.Foot, BodyPartSymmetry.Right):
                     return HumanoidVisualLayers.RFoot;
-                case (BodyPartType.Torso, BodyPartSymmetry.None):
-                    return HumanoidVisualLayers.Chest;
                 default:
                     return HumanoidVisualLayers.Special;
             }
@@ -104,9 +102,6 @@ namespace Content.Shared._Starlight.Humanoid
                     break;
                 case BodyPartType.Foot:
                     slot += "foot";
-                    break;
-                case BodyPartType.Torso:
-                    slot += "torso";
                     break;
                 default:
                     return "";

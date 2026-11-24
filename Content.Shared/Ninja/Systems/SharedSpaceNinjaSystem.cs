@@ -15,11 +15,13 @@ public abstract partial class SharedSpaceNinjaSystem : EntitySystem
     [Dependency] protected SharedNinjaSuitSystem Suit = default!;
     [Dependency] protected SharedPopupSystem Popup = default!;
 
-    [Dependency] public EntityQuery<SpaceNinjaComponent> NinjaQuery = default!;
+    public EntityQuery<SpaceNinjaComponent> NinjaQuery;
 
     public override void Initialize()
     {
         base.Initialize();
+
+        NinjaQuery = GetEntityQuery<SpaceNinjaComponent>();
 
         SubscribeLocalEvent<SpaceNinjaComponent, AttackedEvent>(OnNinjaAttacked);
         SubscribeLocalEvent<SpaceNinjaComponent, MeleeAttackEvent>(OnNinjaAttack);

@@ -328,14 +328,13 @@ public sealed partial class NoteEdit : FancyWindow
 
         // Starlight-start
         // duration should always be set from creation time for consistency
-        // show an error if trying to set an expiry before it was created or too far ahead
+        // show an error if trying to set an expiry in the past or too far ahead
         var now = DateTime.UtcNow;
         DateTime? expiry;
-        var creation = _creationTime ?? now;
-        try { expiry = creation.AddMinutes(inputInt * mult); }
+        try { expiry = (_creationTime ?? now).AddMinutes(inputInt * mult); }
         catch (ArgumentOutOfRangeException) { expiry = null; }
 
-        if (!expiry.HasValue || expiry.Value < creation)
+        if (!expiry.HasValue || expiry.Value < now)
         {
             ExpiryLineEdit.ModulateSelfOverride = Color.Red;
             return false;

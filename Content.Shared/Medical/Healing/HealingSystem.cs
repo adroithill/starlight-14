@@ -25,7 +25,6 @@ using Content.Shared._FarHorizons.Medical.ConditionalHealing;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Eye.Blinding.Systems;
 using Content.Shared._Starlight.Medical.Body.Systems;
-using Content.Shared.Whitelist;
 
 namespace Content.Shared.Medical.Healing;
 
@@ -43,7 +42,6 @@ public sealed partial class HealingSystem : EntitySystem
     [Dependency] private SharedSolutionContainerSystem _solutionContainerSystem = default!;
     [Dependency] private ConditionalHealingSystem _conditionalHealing = default!; // Far Horizons
     [Dependency] private BlindableSystem _blindable = default!; // Far Horizons
-    [Dependency] private EntityWhitelistSystem _whitelist = default!; // Starlight
 
     public override void Initialize()
     {
@@ -265,15 +263,6 @@ public sealed partial class HealingSystem : EntitySystem
             _popupSystem.PopupClient(Loc.GetString("medical-item-cant-use", ("item", healing.Owner)), healing, user);
             return false;
         }
-
-        // Starlight Start
-        // If we have a whitelist and are not on the whitelist OR we have a blacklist and are on the blacklist, cancel the doafter.
-        if ((healing.Comp.Whitelist != null && !_whitelist.IsValid(healing.Comp.Whitelist, target.Owner)) || (healing.Comp.Blacklist != null && _whitelist.IsValid(healing.Comp.Blacklist, target.Owner)))
-        {
-            _popupSystem.PopupClient(Loc.GetString("medical-item-whitelist-blacklist-failed", ("item", healing.Owner), ("target", Identity.Entity(target.Owner, EntityManager))), healing, user);
-            return false;
-        }
-        // Starlight End
 
         _audio.PlayPredicted(healing.Comp.HealingBeginSound, healing, user);
 

@@ -166,7 +166,7 @@
 - type: quickPhrase
   id: BaseMaterialPhrase
   parent: BaseSubjectPhrase
-  group: aac-group-materials #Starlight: Make group names localization friendly
+  group: Materials
   abstract: true
 
 - type: quickPhrase

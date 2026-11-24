@@ -93,25 +93,36 @@ public sealed partial class EmergencyLightSystem : SharedEmergencyLightSystem
         }
     }
 
-    // Starlight-start: simplified alert level change handler
     private void OnAlertLevelChanged(AlertLevelChangedEvent ev)
     {
         if (!TryComp<AlertLevelComponent>(ev.Station, out var alert))
             return;
 
-        if (alert.AlertLevels == null || !alert.AlertLevels.Levels.TryGetValue(ev.AlertLevel, out _))
+        if (alert.AlertLevels == null || !alert.AlertLevels.Levels.TryGetValue(ev.AlertLevel, out var details))
             return;
 
-        var query = EntityQueryEnumerator<EmergencyLightComponent, TransformComponent>();
-        while (query.MoveNext(out var uid, out var light, out var xform))
+        var query = EntityQueryEnumerator<EmergencyLightComponent, PointLightComponent, AppearanceComponent, TransformComponent>();
+        while (query.MoveNext(out var uid, out var light, out var pointLight, out var appearance, out var xform))
         {
             if (CompOrNull<StationMemberComponent>(xform.GridUid)?.Station != ev.Station)
                 continue;
 
-            UpdateState((uid, light));
+            _pointLight.SetColor(uid, details.EmergencyLightColor, pointLight);
+            _appearance.SetData(uid, EmergencyLightVisuals.Color, details.EmergencyLightColor, appearance);
+
+            if (details.ForceEnableEmergencyLights && !light.ForciblyEnabled)
+            {
+                light.ForciblyEnabled = true;
+                TurnOn((uid, light));
+            }
+            else if (!details.ForceEnableEmergencyLights && light.ForciblyEnabled)
+            {
+                // Previously forcibly enabled, and we went down an alert level.
+                light.ForciblyEnabled = false;
+                UpdateState((uid, light));
+            }
         }
     }
-    // Starlight-end
 
     public void SetState(EntityUid uid, EmergencyLightComponent component, EmergencyLightState state)
     {
@@ -135,16 +146,6 @@ public sealed partial class EmergencyLightSystem : SharedEmergencyLightSystem
     {
         if (entity.Comp.State == EmergencyLightState.On)
         {
-            // Starlight-start: Do not drain battery if station power is active, and recharge internal battery
-            if (TryComp<ApcPowerReceiverComponent>(entity.Owner, out var receiver) && receiver.Powered)
-            {
-                if (!_battery.IsFull((entity.Owner, battery)))
-                    _battery.ChangeCharge((entity.Owner, battery), entity.Comp.ChargingWattage * frameTime * entity.Comp.ChargingEfficiency);
-
-                return;
-            }
-            // Starlight-end
-
             if (!_battery.TryUseCharge((entity.Owner, battery), entity.Comp.Wattage * frameTime))
             {
                 SetState(entity.Owner, entity.Comp, EmergencyLightState.Empty);
@@ -174,40 +175,31 @@ public sealed partial class EmergencyLightSystem : SharedEmergencyLightSystem
         if (!TryComp<ApcPowerReceiverComponent>(entity.Owner, out var receiver))
             return;
 
-        // Starlight-start: correct alert light color, force enable, and APC load resolution
-        var color = Color.Red;
-        var forceEnable = false;
+        if (!TryComp<AlertLevelComponent>(_station.GetOwningStation(entity.Owner), out var alerts))
+            return;
 
-        if (TryComp<AlertLevelComponent>(_station.GetOwningStation(entity.Owner), out var alerts)
-            && alerts.AlertLevels != null
-            && alerts.AlertLevels.Levels.TryGetValue(alerts.CurrentLevel, out var details))
+        if (alerts.AlertLevels == null || !alerts.AlertLevels.Levels.TryGetValue(alerts.CurrentLevel, out var details))
         {
-            color = details.EmergencyLightColor;
-            forceEnable = details.ForceEnableEmergencyLights;
+            TurnOff(entity, Color.Red); // if no alert, default to off red state
+            return;
         }
 
-        entity.Comp.ForciblyEnabled = forceEnable;
-
-        if (entity.Comp.ForciblyEnabled)
+        if (receiver.Powered && !entity.Comp.ForciblyEnabled) // Green alert
         {
-            if (receiver.Powered)
-                receiver.Load = (int) Math.Abs(entity.Comp.Wattage);
-
-            TurnOn(entity, color);
-            SetState(entity.Owner, entity.Comp, EmergencyLightState.On);
+            receiver.Load = (int) Math.Abs(entity.Comp.Wattage);
+            TurnOff(entity, details.Color);
+            SetState(entity.Owner, entity.Comp, EmergencyLightState.Charging);
         }
-        else if (!receiver.Powered)
+        else if (!receiver.Powered) // If internal battery runs out it will end in off red state
         {
             TurnOn(entity, Color.Red);
             SetState(entity.Owner, entity.Comp, EmergencyLightState.On);
         }
-        else // Powered on normal level (e.g. green alert)
+        else // Powered and enabled
         {
-            receiver.Load = (int) Math.Abs(entity.Comp.Wattage);
-            TurnOff(entity, color);
-            SetState(entity.Owner, entity.Comp, EmergencyLightState.Charging);
+            TurnOn(entity, details.Color);
+            SetState(entity.Owner, entity.Comp, EmergencyLightState.On);
         }
-        // Starlight-end
     }
 
     private void TurnOff(Entity<EmergencyLightComponent> entity)

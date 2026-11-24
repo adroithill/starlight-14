@@ -1,4 +1,3 @@
-using Content.Shared._Starlight.Light.ColorGrading;
 using Content.Shared._Starlight.Sound;
 using Robust.Shared.Prototypes;
 
@@ -43,10 +42,4 @@ public sealed partial class ZonePrototype : IPrototype
     /// </summary>
     [DataField]
     public ProtoId<RoomReverbPrototype>? Reverb;
-
-    /// <summary>
-    /// Colour grade over the view while the player stands in a room of this zone, none when not set.
-    /// </summary>
-    [DataField]
-    public ProtoId<ColorGradePrototype>? ColorGrade;
 }

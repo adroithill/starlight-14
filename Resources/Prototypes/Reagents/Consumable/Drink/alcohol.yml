@@ -1868,11 +1868,12 @@
       metabolites:
         Ethanol: 0.3
       effects:
-      - !type:ModifyStatusEffect
+      - !type:GenericStatusEffect
         conditions:
         - !type:MetabolizerTypeCondition
           type: [ Dwarf ]
-        effectProto: StatusEffectRadiationProtection
+        key: RadiationProtection
+        component: RadiationProtection
         time: 2
         type: Add
   # Starlight edit end

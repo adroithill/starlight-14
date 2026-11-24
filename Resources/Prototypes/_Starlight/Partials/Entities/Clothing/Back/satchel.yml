@@ -1,6 +1,0 @@
-- type: !PartialOnly entity
-  id: ClothingBackpackSatchelAdmin
-  components:
-  - type: FireproofContainer
-
-

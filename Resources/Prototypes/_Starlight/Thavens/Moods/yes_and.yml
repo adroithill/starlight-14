@@ -58,7 +58,7 @@
     - LiveAGloriousLife
     - NaturalHabitat
     - FleshIsWeak
-    - GroupGlub
+    - Marrvelous
     - Empath
     - RedLightGreenLight
     - ColdBlooded
@@ -405,7 +405,7 @@
   moodDesc: thaven-mood-mute-sympathizer-desc
   conflicts:
     - SpeechRestriction
-    - GroupGlub
+    - Marrvelous
 
 # Blind Sympathizer: You want to know how it feels to navigate the world without vision. Find a blindfold and wear it as often as you can.
 - type: thavenMood
@@ -512,11 +512,11 @@
   conflicts:
     - FleshIsSacred
 
-# Group Glub: Seeing how Vulpkanin and other canines gather to howl, you feel envy that Thavenkind doesn't have something similar. Set a meeting place and time for Thaven to glub together and encourage others to show up.
+# What does the Thaven say: Seeing how Shadekin are adored for their marrs, you feel envy that Thavenkind doesn't have something similar that sets them apart. Make up a recognizable sound for Thaven, use it frequently and encourage others to do the same.
 - type: thavenMood
-  id: GroupGlub
-  moodName: thaven-mood-groupglub-name
-  moodDesc: thaven-mood-groupglub-desc
+  id: Marrvelous
+  moodName: thaven-mood-marrvelous-name
+  moodDesc: thaven-mood-marrvelous-desc
   conflicts:
     - MuteSympathizer
 

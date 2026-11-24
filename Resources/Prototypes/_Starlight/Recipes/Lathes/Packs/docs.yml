@@ -3,25 +3,25 @@
   recipes:
   - PrintedDocumentReportMorgueRecipe
   - PrintedDocumentReportResearchAnomalyLogRecipe
-  - PrintedDocumentReportSituationRecipe
+  - PrintedDocumentReportStationRecipe
   - PrintedDocumentReportOnEliminationOfViolationsRecipe
   - PrintedDocumentReportDepartmentRecipe
   - PrintedDocumentReportEmployeePerformanceRecipe
-  - PrintedDocumentVoteRecordRecipe
+  - PrintedDocumentReportOnTheChaptersMeetingRecipe
   - PrintedDocumentInternalAffairsAgentsReportRecipe
   - PrintedDocumentConditionReportRecipe
-  - PrintedDocumentObjectExaminationReportRecipe
+  - PrintedDocumentObjectInvestigationReportRecipe
   - PrintedDocumentExperimentReportRecipe
   - PrintedDocumentDisposalReportRecipe
   - PrintedDocumentArrestReportRecipe
   - PrintedDocumentSalvageLeadReportRecipe
   - PrintedDocumentPsychologicalReportRecipe
   # Statements
-  - PrintedDocumentStatementInterimAppointmentRecipe
-  - PrintedDocumentEmploymentContractRecipe
+  - PrintedDocumentStatementAppointmentInterimChapterRecipe
+  - PrintedDocumentEmploymentStatementRecipe
   - PrintedDocumentResignationStatementRecipe
-  - PrintedDocumentAccessRequestRecipe
-  - PrintedDocumentEquipmentRequestRecipe
+  - PrintedDocumentAccessRequestStatementRecipe
+  - PrintedDocumentEquipmentRequestStatementRecipe
   # InquiriesAndAppeals
   - PrintedDocumentInvocationRecipe
   - PrintedDocumentEvacuationShuttleRequestRecipe
@@ -38,16 +38,16 @@
   - PrintedDocumentP23IdPdaReplacementFormRecipe
   # Complaints
   - PrintedDocumentComplaintViolationLaborRulesRecipe
-  - PrintedDocumentCriminalComplaintRecipe
+  - PrintedDocumentComplaintOffenseRecipe
   # Permissions
   - PrintedDocumentPermissionEquipmentRecipe
   - PrintedDocumentPermissionResearchEquipmentRecipe
   - PrintedDocumentPermissionResearchSiliconConversionRecipe
   - PrintedDocumentPermissionResearchAnomalyHostRecipe
-  - PrintedDocumentSearchWarrantRecipe
-  - PrintedDocumentBodyDisposalPermitRecipe
+  - PrintedDocumentSearchPermissionRecipe
+  - PrintedDocumentPermissionDisposeBodyRecipe
   - PrintedDocumentConstructionPermitRecipe
-  - PrintedDocumentSurgeryConsentFormRecipe
+  - PrintedDocumentSurgeryConsentPermitRecipe
   - PrintedDocumentArtPermitRecipe
   - PrintedDocumentBorgificationConsentFormRecipe
   - PrintedDocumentMechAuthorizationFormRecipe

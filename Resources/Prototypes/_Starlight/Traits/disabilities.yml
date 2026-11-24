@@ -109,7 +109,7 @@
   effects:
     - !type:AddStatusEffect
       statusEffects:
-        - TraitStatusEffectPainNumbness
+        - PainNumbnessTraitStatusEffect
 
 - type: trait
   id: Hemophilia
@@ -120,7 +120,7 @@
   effects:
     - !type:AddStatusEffect
       statusEffects:
-        - TraitStatusEffectHemophilia
+        - StatusEffectHemophiliaTrait
   requirements:
     - !type:SpeciesRequirement
       species:
@@ -223,18 +223,3 @@
       species:
         - Diona
       inverted: true
-
-- type: trait
-  id: XenoVision
-  name: trait-xeno-vision-name
-  description: trait-xeno-vision-desc
-  category: Disabilities
-  cost: 0
-  effects:
-    - !type:AddCompsEffect
-      components:
-        - type: XenoVision
-  requirements:
-    - !type:SpeciesRequirement
-      species:
-        - Xeno

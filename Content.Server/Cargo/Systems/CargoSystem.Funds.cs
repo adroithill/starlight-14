@@ -86,7 +86,6 @@ public sealed partial class CargoSystem
                 _radio.SendRadioMessage(ent, msg, otherAccount.RadioChannel, ent, escapeMarkup: false);
             }
         }
-        if (args.Amount > 100000) _achievement.QueueUnlockAchievement(args.Actor, "personal_liberties"); // Starlight-edit
     }
 
     private void OnToggleLimit(Entity<CargoOrderConsoleComponent> ent, ref CargoConsoleToggleLimitMessage args)

@@ -98,39 +98,39 @@
   - !type:BuyerAccessCondition
 
 - type: listing
-  id: VendorSalvagePKAUpgradeDamageAdv
-  productEntity: PKAUpgradeDamageAdv
+  id: VendorSalvagePKAUpgradeDamage
+  productEntity: PKAUpgradeDamage
   cost:
     SalvageTicket: 250
   categories:
     - SalvageEquipment
   conditions:
     - !type:ListingLimitedStockCondition
-      stock: 3
+      stock: 8
     - !type:BuyerAccessCondition
 
 - type: listing
-  id: VendorSalvagePKAUpgradeRangeAdv
-  productEntity: PKAUpgradeRangeAdv
+  id: VendorSalvagePKAUpgradeRange
+  productEntity: PKAUpgradeRange
   cost:
     SalvageTicket: 250
   categories:
     - SalvageEquipment
   conditions:
     - !type:ListingLimitedStockCondition
-      stock: 3
+      stock: 8
     - !type:BuyerAccessCondition
 
 - type: listing
-  id: VendorSalvagePKAUpgradeFireRateAdv
-  productEntity: PKAUpgradeFireRateAdv
+  id: VendorSalvagePKAUpgradeFireRate
+  productEntity: PKAUpgradeFireRate
   cost:
     SalvageTicket: 250
   categories:
     - SalvageEquipment
   conditions:
     - !type:ListingLimitedStockCondition
-      stock: 3
+      stock: 8
     - !type:BuyerAccessCondition
 
 - type: listing
@@ -192,30 +192,6 @@
 - type: listing
   id: VendorSalvageSalvageEncryptionKey
   productEntity: EncryptionKeyExpedition
-  cost:
-    SalvageTicket: 25
-  categories:
-    - SalvageEquipment
-  conditions:
-    - !type:ListingLimitedStockCondition
-      stock: 5
-    - !type:BuyerAccessCondition
-
-- type: listing
-  id: VendorSalvageSalvageTracker
-  productEntity: ITGTrackerImplanter
-  cost:
-    SalvageTicket: 25
-  categories:
-    - SalvageEquipment
-  conditions:
-    - !type:ListingLimitedStockCondition
-      stock: 5
-    - !type:BuyerAccessCondition
-
-- type: listing
-  id: VendorSalvageSalvageMindShield
-  productEntity: ITGMindShieldImplanter
   cost:
     SalvageTicket: 25
   categories:

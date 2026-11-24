@@ -48,13 +48,8 @@ public sealed partial class ContrabandSystem : EntitySystem
         Dirty(uid, contraband);
     }
 
-    private void OnDetailedExamine(EntityUid uid, ContrabandComponent component, ref GetVerbsEvent<ExamineVerb> args) // Starlight
+    private void OnDetailedExamine(EntityUid _, ContrabandComponent component, ref GetVerbsEvent<ExamineVerb> args)
     {
-        // Starlight start
-        if (args.Target != uid)
-            return;
-        // Starlight end
-
         if (!_contrabandExamineEnabled)
             return;
 

@@ -34,7 +34,6 @@
   - type: Clothing
     slots: [belt]
     sprite: Objects/Specific/Janitorial/trashbag.rsi
-    equippedState: equipped-BELT
   - type: Item
     size: Normal
 
@@ -51,13 +50,10 @@
     heldPrefix: blue
   - type: StorageFillVisualizer
     fillBaseName: blue-icon
-  - type: Clothing
-    slots: [belt]
-    sprite: Objects/Specific/Janitorial/trashbag.rsi
-    equippedState: blue-equipped-BELT
-  - type: Tag
+  - type: Tag # Starlight start - used by the janitorial trolley item mapper
     tags:
-    - TrashBagBlue
+    - TrashBag
+    - TrashBagBlue # Starlight end
 
 - type: entity
   name: spell of all-consuming cleanliness

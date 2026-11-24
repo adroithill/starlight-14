@@ -50,8 +50,6 @@ public sealed class RemoteControlConsoleBoundUserInterface(EntityUid owner, Enum
         _window.RemoteToggleKnockdownPressed += RemoteToggleKnockdown;
         _window.RemoteReleasePulledObjectPressed += RemoteReleasePulledObject;
         _window.RemoteInteractionPressed += RemoteInteractionPressed;
-        _window.RemoteAttackHoldChanged += RemoteAttackHoldChanged;
-        _window.RemoteDragDropPressed += RemoteDragDropPressed;
         _window.RemoteActionPressed += RemoteActionPressed;
         _window.RemoteTargetActionPressed += RemoteTargetActionPressed;
         _window.RemoteHandPressed += RemoteHandPressed;
@@ -61,11 +59,7 @@ public sealed class RemoteControlConsoleBoundUserInterface(EntityUid owner, Enum
         _window.OnFinalClose += OnWindowClosed;
     }
 
-    private void OnWindowClosed()
-    {
-        _window?.CancelRemoteAttackHolds();
-        Close();
-    }
+    private void OnWindowClosed() => Close();
 
     private void OpenSettings()
         => SendMessage(new RemoteControlOpenSettingsMessage());
@@ -131,15 +125,18 @@ public sealed class RemoteControlConsoleBoundUserInterface(EntityUid owner, Enum
         {
             if (_remoteQuickConstructionItem != quickItemUid)
             {
-                ClearRemoteQuickConstruction();
+                _remoteQuickConstruction?.Dispose();
                 _remoteQuickConstruction = new QuickConstructionBoundUserInterface(quickItemUid, QuickConstructionUiKey.Key);
                 _remoteQuickConstructionItem = quickItemUid;
-                _remoteQuickConstruction.RemoteMenuClosed += OnRemoteQuickConstructionMenuClosed;
                 _remoteQuickConstruction.OpenRemote();
             }
         }
-        else
-            ClearRemoteQuickConstruction();
+        else if (_remoteQuickConstruction is not null)
+        {
+            _remoteQuickConstruction.Dispose();
+            _remoteQuickConstruction = null;
+            _remoteQuickConstructionItem = null;
+        }
     }
 
     public override void Update()
@@ -197,14 +194,6 @@ public sealed class RemoteControlConsoleBoundUserInterface(EntityUid owner, Enum
     private void OnRemoteItemConstruction(string prototypeName)
         => SendMessage(new RemoteControlBuildItemConstructionMessage { PrototypeName = prototypeName });
 
-    private void OnRemoteQuickConstructionMenuClosed()
-    {
-        if (_remoteQuickConstructionItem is not { } item)
-            return;
-
-        SendMessage(new RemoteControlCloseQuickConstructionMessage { Item = EntMan.GetNetEntity(item), });
-    }
-
     private void RemoteInteractionPressed(NetCoordinates coordinates, EntityUid? target, bool altInteract,
         bool activateInWorld,
         RemoteControlInteractionAction action, AtmosPipeLayer? pipeLayer)
@@ -244,18 +233,6 @@ public sealed class RemoteControlConsoleBoundUserInterface(EntityUid owner, Enum
         });
     }
 
-    private void RemoteAttackHoldChanged(bool held, RemoteControlAttackHoldType type, bool altInteract,
-        NetCoordinates? coordinates, EntityUid? target)
-        => SendMessage(new RemoteControlAttackHoldMessage
-        {
-            Held = held,
-            Type = type,
-            AltInteract = altInteract,
-            HasCoordinates = coordinates is not null,
-            Coordinates = coordinates.GetValueOrDefault(),
-            Target = target is { } entity ? EntMan.GetNetEntity(entity) : null,
-        });
-
     private void OnRemoteMenuInteraction(EntityUid target, bool altInteract, RemoteControlInteractionAction action)
     {
         if (_remoteEntity is null)
@@ -273,32 +250,12 @@ public sealed class RemoteControlConsoleBoundUserInterface(EntityUid owner, Enum
     private void RemoteHandPressed(string hand, RemoteControlHandAction action)
         => SendMessage(new RemoteControlHandMessage { Hand = hand, Action = action });
 
-    private void RemoteDragDropPressed(EntityUid dragged, EntityUid target)
-        => SendMessage(new RemoteControlDragDropMessage
-        {
-            Dragged = EntMan.GetNetEntity(dragged),
-            Target = EntMan.GetNetEntity(target),
-        });
-
     private void RemoteInventoryPressed(string slot, RemoteControlInventoryAction action)
         => SendMessage(new RemoteControlInventoryMessage { Slot = slot, Action = action });
 
-    private void ClearRemoteQuickConstruction()
-    {
-        if (_remoteQuickConstruction is { } quickConstruction)
-        {
-            quickConstruction.RemoteMenuClosed -= OnRemoteQuickConstructionMenuClosed;
-            quickConstruction.Dispose();
-        }
-
-        _remoteQuickConstruction = null;
-        _remoteQuickConstructionItem = null;
-    }
-
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
-            _window?.CancelRemoteAttackHolds();
+        base.Dispose(disposing);
 
         if (disposing)
         {
@@ -313,7 +270,9 @@ public sealed class RemoteControlConsoleBoundUserInterface(EntityUid owner, Enum
                 _eyeLerpingSystem?.RemoveEye(remoteEntity);
             _remoteEntity = null;
 
-            ClearRemoteQuickConstruction();
+            _remoteQuickConstruction?.Dispose();
+            _remoteQuickConstruction = null;
+            _remoteQuickConstructionItem = null;
 
             if (window is not null)
             {
@@ -323,8 +282,6 @@ public sealed class RemoteControlConsoleBoundUserInterface(EntityUid owner, Enum
                 window.RemoteToggleKnockdownPressed -= RemoteToggleKnockdown;
                 window.RemoteReleasePulledObjectPressed -= RemoteReleasePulledObject;
                 window.RemoteInteractionPressed -= RemoteInteractionPressed;
-                window.RemoteAttackHoldChanged -= RemoteAttackHoldChanged;
-                window.RemoteDragDropPressed -= RemoteDragDropPressed;
                 window.RemoteActionPressed -= RemoteActionPressed;
                 window.RemoteHandPressed -= RemoteHandPressed;
                 window.RemoteInventoryPressed -= RemoteInventoryPressed;
@@ -335,7 +292,5 @@ public sealed class RemoteControlConsoleBoundUserInterface(EntityUid owner, Enum
                 window.DisposePopOut();
             }
         }
-
-        base.Dispose(disposing);
     }
 }

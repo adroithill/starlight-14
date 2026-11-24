@@ -40,6 +40,7 @@ public sealed partial class ModifySleepinessEntityEffectSystem : EntityEffectSys
                     initialTime))
                 return;
             SetSleepInductionRequirement(statusEffect.Value, args.Effect);
+
             return;
         }
 
@@ -66,8 +67,7 @@ public sealed partial class ModifySleepinessEntityEffectSystem : EntityEffectSys
         if (newDuration <= currentDuration)
             return;
 
-        if (!_status.TrySetStatusEffectDuration(entity, args.Effect.EffectProto, newDuration))
-            return;
+        _status.TrySetStatusEffectDuration(entity, args.Effect.EffectProto, newDuration);
     }
 
     private TimeSpan GetResistedTime(EntityUid entity, TimeSpan time, TimeSpan maximumSleepiness,

@@ -220,15 +220,8 @@ namespace Content.Client.Construction
 
         private bool HandleFlip(in PointerInputCmdHandler.PointerInputCmdArgs args)
         {
-            // Starlight - start
-            if (args.State != BoundKeyState.Down)
-                return true;
-
-            if (TryFlipQuickConstructionPlacement())
-                return true;
-            // Starlight - end
-
-            FlipConstructionPrototype?.Invoke(this, EventArgs.Empty);
+            if (args.State == BoundKeyState.Down)
+                FlipConstructionPrototype?.Invoke(this, EventArgs.Empty);
             return true;
         }
 

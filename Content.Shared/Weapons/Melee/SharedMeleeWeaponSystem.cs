@@ -73,7 +73,6 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
     [Dependency] private ScreenshakeSystem _shake = default!; // Starlight | ES Screenshake
 
     private static readonly string BluntDamageName = "Blunt"; // Starlight
-    [Dependency] private EntityQuery<DamageableComponent> _damageQuery = default!;
     private const int AttackMask = (int) (CollisionGroup.MobMask | CollisionGroup.Opaque);
 
     /// <summary>
@@ -668,11 +667,13 @@ public abstract partial class SharedMeleeWeaponSystem : EntitySystem
                                         session));
 
         var targets = new HashSet<EntityUid>();
+        var damageQuery = GetEntityQuery<DamageableComponent>();
+
         foreach (var entity in entities)
         {
             if (entity == user ||
                 entity == originEntity || // Starlight edit
-                !_damageQuery.HasComponent(entity))
+                !damageQuery.HasComponent(entity))
                 continue;
 
             targets.Add(entity);

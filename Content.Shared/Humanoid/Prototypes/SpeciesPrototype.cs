@@ -224,6 +224,5 @@ public enum SpeciesNaming : byte
     TheFirstofLast,
     PrefixSuffix, // Starlight
     LastFirst,    // Starlight Rodentia
-    IdFirst,       // Starlight Sawnians
-    Serial,        // Starlight Xenos
+    IdFirst       // Starlight Sawnians
 }

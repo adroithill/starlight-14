@@ -1,8 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Content.Shared._Starlight.Nutrition.Components;
 using Content.Shared.Alert;
-using Content.Shared.Bed.Sleep;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Mobs.Systems;
@@ -73,18 +71,12 @@ public sealed partial class HungerSystem : EntitySystem
     /// <summary>
     /// Gets the current hunger value of the given <see cref="HungerComponent"/>.
     /// </summary>
-    public float GetHunger(HungerComponent component) => GetHunger(component, HasComp<SleepingComponent>(component.Owner)); // Starlight
-
-#region Starlight
-    private float GetHunger(HungerComponent component, bool sleeping)
+    public float GetHunger(HungerComponent component)
     {
         var dt = _timing.CurTime - component.LastAuthoritativeHungerChangeTime;
-        var decayMultiplier = sleeping ? SleepingDecayMultiplier : 1f;
-        var decay = (float)dt.TotalSeconds * component.ActualDecayRate * decayMultiplier;
-        var value = component.LastAuthoritativeHungerValue - decay;
+        var value = component.LastAuthoritativeHungerValue - (float)dt.TotalSeconds * component.ActualDecayRate;
         return ClampHungerWithinThresholds(component, value);
     }
-#endregion
 
     /// <summary>
     /// Adds to the current hunger of an entity by the specified value
@@ -181,25 +173,14 @@ public sealed partial class HungerSystem : EntitySystem
         if (!Resolve(uid, ref component))
             return;
 
-        //Starlight Start
-        if (component.CurrentThreshold <= HungerThreshold.Starving && !_mobState.IsDead(uid))
+        if (component.CurrentThreshold <= HungerThreshold.Starving &&
+            component.StarvationDamage is { } damage &&
+            !_mobState.IsDead(uid))
         {
-            if( component.ApplyStarvationVignette && !HasComp<StarvationComponent>(uid) )
-            {
-                AddComp<StarvationComponent>(uid);
-            }
-
-            if( component.StarvationDamage is { } damage)
-            {
-                _damageable.TryChangeDamage(uid, damage, true, false);
-            }
-        }
-        else if( component.ApplyStarvationVignette )
-        {
-            RemComp<StarvationComponent>(uid);
+            _damageable.TryChangeDamage(uid, damage, true, false);
         }
 
-        // Better passive damage system than the one above, I just don't want to refactor everything rn.
+        // Starlight begin - Better passive damage system than the one above, I just don't want to refactor everything rn.
         if (!TryComp<DamageableComponent>(uid, out var dmgComp))
             return;
 
@@ -207,7 +188,7 @@ public sealed partial class HungerSystem : EntitySystem
             _damageable.GetTotalDamage(uid) < component.PassiveDamageCap &&
             component.PassiveDamageSpecifier is { } passiveDamage && !_mobState.IsDead(uid))
             _damageable.TryChangeDamage(uid, passiveDamage, true, false);
-        //Starlight End
+        // Starlight end
     }
 
     /// <summary>
@@ -306,7 +287,7 @@ public sealed partial class HungerSystem : EntitySystem
                 var totalDrain =
                     hunger.HungerDrains.Aggregate<(EntityUid, float, TimeSpan?), float>(1,
                         (current, modifier) => current * modifier.Item2);
-                ModifyHunger(uid, -totalDrain * hunger.ActualDecayRate * GetSleepingDecayMultiplier(uid), hunger); // Starlight
+                ModifyHunger(uid, -totalDrain * hunger.ActualDecayRate, hunger);
             }
             //Starlight end
 

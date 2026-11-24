@@ -40,11 +40,13 @@ public sealed partial class HitscanBasicRaycastSystem : EntitySystem
     [Dependency] private IRobustRandom _rand = default!; // Starlight-edit
     [Dependency] private SharedProjectileCoverSystem _cover = default!; // Starlight-edit
 
-    [Dependency] private EntityQuery<HitscanBasicVisualsComponent> _visualsQuery = default!;
+    private EntityQuery<HitscanBasicVisualsComponent> _visualsQuery;
 
     public override void Initialize()
     {
         base.Initialize();
+
+        _visualsQuery = GetEntityQuery<HitscanBasicVisualsComponent>();
 
         SubscribeLocalEvent<HitscanBasicRaycastComponent, HitscanTraceEvent>(OnHitscanFired);
     }

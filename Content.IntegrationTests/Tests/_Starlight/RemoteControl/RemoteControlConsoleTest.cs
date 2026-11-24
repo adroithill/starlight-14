@@ -12,7 +12,6 @@ using Content.Shared._Afterlight.Silicons.Borgs;
 using Content.Shared._Starlight.Computers.RemoteControl;
 using Content.Shared._Starlight.Silicons;
 using Content.Shared._Starlight.Silicons.Borgs;
-using Content.Shared.CombatMode;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.DeviceLinking;
 using Content.Shared.Hands.EntitySystems;
@@ -29,7 +28,6 @@ using Content.Shared.Silicons.Borgs;
 using Content.Shared.Throwing;
 using Content.Shared.UserInterface;
 using Content.Shared.Verbs;
-using Content.Shared.Weapons.Melee;
 using Content.Shared.Wires;
 using Robust.Server.Player;
 using Robust.Shared.Containers;
@@ -365,7 +363,7 @@ public sealed class RemoteControlConsoleTest : GameTest
         try
         {
             var coordinates = new MapCoordinates(0, 0, mapId);
-            var toyRemote = SEntMan.Spawn("HandheldRemoteControlToy", coordinates);
+            var toyRemote = SEntMan.SpawnEntity("HandheldRemoteControlExpedition", coordinates);
             var remote = SEntMan.SpawnEntity("PlushieRouny", coordinates);
             var user = SEntMan.SpawnEntity("MobHuman", coordinates);
             var activatable = SEntMan.GetComponent<ActivatableUIComponent>(toyRemote);
@@ -419,7 +417,7 @@ public sealed class RemoteControlConsoleTest : GameTest
             try
             {
                 var coordinates = new MapCoordinates(0, 0, mapId);
-                var toyRemote = SEntMan.Spawn("HandheldRemoteControlToy", coordinates);
+                var toyRemote = SEntMan.SpawnEntity("HandheldRemoteControlExpedition", coordinates);
                 var remote = SEntMan.SpawnEntity("PlushieRouny", coordinates);
                 var user = SEntMan.SpawnEntity("MobHuman", coordinates);
                 var itemToggle = SEntMan.GetComponent<ItemToggleComponent>(toyRemote);
@@ -1192,7 +1190,7 @@ public sealed class RemoteControlConsoleTest : GameTest
             var handheld = SEntMan.SpawnEntity("HandheldRemoteControl", coordinates);
             var antagHandheld = SEntMan.SpawnEntity("HandheldRemoteControlAntag", coordinates);
             var antagMindHandheld = SEntMan.SpawnEntity("HandheldRemoteControlAntagMind", coordinates);
-            var toyRemote = SEntMan.Spawn("HandheldRemoteControlToy", coordinates);
+            var toyRemote = SEntMan.SpawnEntity("HandheldRemoteControlExpedition", coordinates);
             var computer = SEntMan.SpawnEntity("RemoteControlConsole", coordinates);
             var playerAi = SEntMan.SpawnEntity("AiHeld", coordinates);
 
@@ -1562,7 +1560,8 @@ public sealed class RemoteControlConsoleTest : GameTest
     [TestCase(false, false)]
     [TestCase(true, false)]
     [TestCase(true, true)]
-    public async Task RemovingBrainPreservesConnection(bool controlling, bool previousRelay) =>
+    public async Task RemovingBrainPreservesConnection(bool controlling, bool previousRelay)
+    {
         await Server.WaitAssertion(() =>
         {
             var mapSystem = Server.System<SharedMapSystem>();
@@ -1570,7 +1569,6 @@ public sealed class RemoteControlConsoleTest : GameTest
             var mover = Server.System<SharedMoverController>();
             var remoteControl = Server.System<RemoteControlConsoleSystem>();
             var ui = Server.System<SharedUserInterfaceSystem>();
-            var appearanceSystem = Server.System<SharedAppearanceSystem>();
             var map = mapSystem.CreateMap(out var mapId);
             var coordinates = new MapCoordinates(0, 0, mapId);
 
@@ -1579,7 +1577,6 @@ public sealed class RemoteControlConsoleTest : GameTest
                 var chassis = SEntMan.SpawnEntity("BorgChassisGeneric", coordinates);
                 var brain = SEntMan.SpawnEntity("RemoteControlBrain", coordinates);
                 var borg = SEntMan.GetComponent<BorgChassisComponent>(chassis);
-                var brainAppearance = SEntMan.GetComponent<AppearanceComponent>(brain);
                 Assert.That(containerSystem.Insert(brain, borg.BrainContainer), Is.True);
 
                 var consoleUid = SEntMan.SpawnEntity("RemoteControlConsole", coordinates);
@@ -1601,7 +1598,6 @@ public sealed class RemoteControlConsoleTest : GameTest
                 }
 
                 Assert.That(containerSystem.Remove(brain, borg.BrainContainer), Is.True);
-                appearanceSystem.SetData(brain, RemoteControlBrainVisuals.Connected, true, brainAppearance);
 
                 Assert.Multiple(() =>
                 {
@@ -1629,28 +1625,13 @@ public sealed class RemoteControlConsoleTest : GameTest
                         Assert.That(state.Inventory, Is.Empty);
                     }
                 });
-
-                if (controlling)
-                {
-                    SEntMan.EventBus.RaiseLocalEvent(consoleUid,
-                        new BoundUIClosedEvent(RemoteControlUIKey.Key, consoleUid, user));
-
-                    Assert.That(console.Controller, Is.Null);
-                    Assert.That(
-                        appearanceSystem.TryGetData(
-                            brain,
-                            RemoteControlBrainVisuals.Connected,
-                            out bool connected,
-                            brainAppearance),
-                        Is.True);
-                    Assert.That(connected, Is.False);
-                }
             }
             finally
             {
                 SEntMan.DeleteEntity(map);
             }
         });
+    }
 
     [Test]
     public async Task RemotelyControlledBorgReactivatesWhenCellRecharges()
@@ -1772,17 +1753,6 @@ public sealed class RemoteControlConsoleTest : GameTest
             ControllerAccessibilityChecked = false;
             ControllerAccessibilityHandled = false;
             ControllerAccessible = false;
-        }
-
-        public RemoteControlUiInteractionActorEvent RaiseRemoteUiInteractionActor(
-            EntityUid controller,
-            EntityUid target,
-            Enum uiKey,
-            bool isOpenAttempt)
-        {
-            var args = new RemoteControlUiInteractionActorEvent(controller, target, uiKey, isOpenAttempt);
-            RaiseLocalEvent(ref args);
-            return args;
         }
 
         private void OnBoundInterfaceMessageAttempt(ref BoundUserInterfaceMessageAttempt args)

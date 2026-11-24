@@ -334,9 +334,6 @@ public sealed partial class AirlockCyclerSystem
                 Bolt(doorInfo.Door, false);
                 if (_doorQuery.TryComp(doorInfo.Door, out var door) && door.State == DoorState.Closed)
                     _doors.TryOpen(doorInfo.Door, door, comp.Requester, quiet: true);
-
-                if (comp.BoltOpen && door != null && door.State is DoorState.Open or DoorState.Opening)
-                    Bolt(doorInfo.Door, true);
             }
         }
 
@@ -388,22 +385,13 @@ public sealed partial class AirlockCyclerSystem
         var unsecured = false;
         for (var i = 0; i < ent.Comp.Sides.Count; i++)
         {
-            var isTarget = i == ent.Comp.TargetSide;
-            if (isTarget && !ent.Comp.BoltOpen)
+            if (i == ent.Comp.TargetSide)
                 continue;
 
             foreach (var linked in GetOwnedSinks(ent, source, ent.Comp.Sides[i]))
             {
                 if (!_doorQuery.TryComp(linked, out var door))
                     continue;
-
-                // Doors held open stay bolted: put the bolts back if someone released them.
-                if (isTarget)
-                {
-                    if (door.State is DoorState.Open or DoorState.Opening)
-                        Bolt(linked, true);
-                    continue;
-                }
 
                 switch (door.State)
                 {

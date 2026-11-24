@@ -8,7 +8,7 @@ using Robust.Shared.Utility;
 namespace Content.Client.UserInterface.Systems.Crafting;
 
 [UsedImplicitly]
-public sealed partial class CraftingUIController : UIController, IOnStateChanged<GameplayState> // Starlight
+public sealed class CraftingUIController : UIController, IOnStateChanged<GameplayState>
 {
     private ConstructionMenuPresenter? _presenter;
     private Controls.MenuButton? CraftingButton => UIManager.GetActiveUIWidgetOrNull<MenuBar.Widgets.GameTopMenuBar>()?.CraftingButton;

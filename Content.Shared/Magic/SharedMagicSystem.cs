@@ -37,7 +37,6 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Serialization.Manager;
 using Robust.Shared.Spawners;
-using Content.Shared.CombatMode.Pacification;
 
 namespace Content.Shared.Magic;
 
@@ -129,13 +128,6 @@ public abstract partial class SharedMagicSystem : EntitySystem
 
         if (comp.RequiresSpeech && HasComp<MutedComponent>(args.Performer))
             hasReqs = false;
-
-        //Starlight Start
-        if (comp.IsAggressive && HasComp<PacifiedComponent>(args.Performer))
-        {
-            args.Cancelled = true; //continue the requirements check after, so if you don't meet the requirements you still get the popup
-        }
-        //Starlight End
 
         if (hasReqs)
             return;
@@ -294,13 +286,10 @@ public abstract partial class SharedMagicSystem : EntitySystem
     #region Projectile Spells
     private void OnProjectileSpell(ProjectileSpellEvent ev)
     {
-        if (ev.Handled || !PassesSpellPrerequisites(ev.Action, ev.Performer))
+        if (ev.Handled || !PassesSpellPrerequisites(ev.Action, ev.Performer) || !_net.IsServer)
             return;
 
         ev.Handled = true;
-
-        if (!_net.IsServer)
-            return; // client returns handled for predicted audio
 
         var xform = Transform(ev.Performer);
         var fromCoords = xform.Coordinates;

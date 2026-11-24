@@ -20,12 +20,12 @@ public sealed partial class DumpableSystem : EntitySystem
     [Dependency] private SharedDoAfterSystem _doAfterSystem = default!;
     [Dependency] private SharedTransformSystem _transformSystem = default!;
 
-    [Dependency] private EntityQuery<ItemComponent> _itemQuery = default!;
+    private EntityQuery<ItemComponent> _itemQuery;
 
     public override void Initialize()
     {
         base.Initialize();
-
+        _itemQuery = GetEntityQuery<ItemComponent>();
         SubscribeLocalEvent<DumpableComponent, AfterInteractEvent>(OnAfterInteract, after: new[]{ typeof(SharedEntityStorageSystem) });
         SubscribeLocalEvent<DumpableComponent, GetVerbsEvent<AlternativeVerb>>(AddDumpVerb);
         SubscribeLocalEvent<DumpableComponent, GetVerbsEvent<UtilityVerb>>(AddUtilityVerbs);

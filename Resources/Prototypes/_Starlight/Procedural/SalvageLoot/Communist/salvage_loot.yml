@@ -38,8 +38,6 @@
         - proto: AmmoTechFabCircuitboard
           cost: 10
           prob: 0.2
-        - proto: PKAUpgradeFireRateExp
-          cost: 3
 #baseloot
         - proto: WaterTankHighCapacity
         - proto: WeldingFuelTankHighCapacity
@@ -110,8 +108,6 @@
         - proto: AmmoTechFabCircuitboard
           cost: 10
           prob: 0.2
-        - proto: PKAUpgradeFireRateExp
-          cost: 3
         - proto: CrateITGArmamentSurplus
           cost: 15
           prob: 0.5
@@ -204,10 +200,6 @@
           cost: 13
         - proto: MechReactorMicro
           cost: 10
-        - proto: Weaponpkashotgun
-          cost: 10
-        - proto: PKAUpgradeFireRateExp
-          cost: 3
         - proto: WeaponSniperHristovWorn
           cost: 10
           prob: 0.5

@@ -53,7 +53,7 @@ public sealed partial class LimbSystem : SharedLimbSystem
                     {
                         if (TryComp(containedEnt, out OrganComponent? _))
                         {
-                            var addedEv = new SurgeryOrganImplantationCompleted(body, limb, containedEnt, body);
+                            var addedEv = new SurgeryOrganImplantationCompleted(body, limb, containedEnt);
                             RaiseLocalEvent(containedEnt, ref addedEv);
                         }
                     }
@@ -79,8 +79,6 @@ public sealed partial class LimbSystem : SharedLimbSystem
                 }
                 break;
             case BodyPartType.Foot:
-                break;
-            default:
                 break;
         }
         RaiseLimbAttachedEvent(body, limb);
@@ -108,6 +106,17 @@ public sealed partial class LimbSystem : SharedLimbSystem
                     out _);
                 break;
         }
+    }
+
+    private void RaiseLimbAttachedEvent(Entity<HumanoidAppearanceComponent> body, Entity<BodyPartComponent> limb)
+    {
+        var @event = new LimbAttachedEvent
+        {
+            Limb = limb,
+            Body = body
+        };
+        RaiseLocalEvent(body, ref @event);
+        RaiseLocalEvent(limb, ref @event);
     }
 
     private void RemoveLimb(Entity<TransformComponent, HumanoidAppearanceComponent, BodyComponent> body, Entity<TransformComponent, MetaDataComponent, BodyPartComponent> limb)
@@ -139,7 +148,7 @@ public sealed partial class LimbSystem : SharedLimbSystem
                     {
                         if (TryComp(containedEnt, out OrganComponent? _))if (TryComp(containedEnt, out TransformComponent? transform) && TryComp(containedEnt, out MetaDataComponent? metaData))
                         {
-                            var ev = new SurgeryOrganExtracted(body, limb, containedEnt, body);
+                            var ev = new SurgeryOrganExtracted(body, limb, containedEnt);
                             RaiseLocalEvent(containedEnt, ref ev);
                         }
                     }

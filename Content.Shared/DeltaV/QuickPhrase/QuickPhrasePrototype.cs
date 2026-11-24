@@ -35,15 +35,7 @@ public sealed partial class QuickPhrasePrototype : IPrototype, IInheritingProtot
     /// Determines how the phrase is sorted in the UI.
     /// </summary>
     [DataField]
-    public LocId Group = "aac-group-general"; // Starlight Edit: Localized group label for fallback
-
-    #region Starlight
-    /// <summary>
-    /// Starlight: Sort order of the group within its tab. Lower values are shown first and ties are sorted by name.
-    /// </summary>
-    [DataField]
-    public int GroupOrder;
-    #endregion
+    public string Group = string.Empty;
 
     /// <summary>
     /// The tab in the UI that this phrase falls under.

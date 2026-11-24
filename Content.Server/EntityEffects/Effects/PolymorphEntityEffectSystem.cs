@@ -1,5 +1,4 @@
-﻿using Content.Server._Starlight.Achievement;
-using Content.Server.Polymorph.Components;
+﻿using Content.Server.Polymorph.Components;
 using Content.Server.Polymorph.Systems;
 using Content.Shared.EntityEffects;
 
@@ -12,14 +11,9 @@ namespace Content.Server.EntityEffects.Effects;
 public sealed partial class PolymorphEntityEffectSystem : EntityEffectSystem<PolymorphableComponent, Shared.EntityEffects.Effects.Polymorph>
 {
     [Dependency] private PolymorphSystem _polymorph = default!;
-    [Dependency] private AchievementSystem _achievement = default!; // Starlight-edit
 
     protected override void Effect(Entity<PolymorphableComponent> entity, ref EntityEffectEvent<Shared.EntityEffects.Effects.Polymorph> args)
     {
-        var polyOut = _polymorph.PolymorphEntity(entity, args.Effect.Prototype);
-        // Starlight-start
-        if (polyOut != null && MetaData(polyOut.Value).EntityPrototype!.ID.Equals("ArtifactLizard"))
-            _achievement.QueueUnlockAchievement(entity, "weh");
-        // Starlight-end
+        _polymorph.PolymorphEntity(entity, args.Effect.Prototype);
     }
 }

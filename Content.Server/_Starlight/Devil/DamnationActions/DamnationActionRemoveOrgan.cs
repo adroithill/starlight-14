@@ -44,7 +44,7 @@ public sealed partial class DamnationActionRemoveOrgan : DamnationAction
                 // so the event is manually triggered to cause run on effects (blindness, muteness, et cetera)
                 if(container is BaseContainer part)
                 {
-                    var ev = new SurgeryOrganExtracted(victim, part.Owner, organ.Id, victim);
+                    var ev = new SurgeryOrganExtracted(victim, part.Owner, organ.Id);
                     _entityManager.EventBus.RaiseLocalEvent(organ.Id, ref ev);
                 }
 

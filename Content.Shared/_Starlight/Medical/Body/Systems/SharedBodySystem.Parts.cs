@@ -55,7 +55,7 @@ public partial class SharedBodySystem
             AddOrgan((insertedUid, organ), ent.Comp.Body.Value, ent);
             if (slotId != "body_organ_slot_cavity")
             {
-                var addedEv = new SurgeryOrganImplantationCompleted(ent.Comp.Body.Value, ent.Owner, insertedUid, ent.Comp.Body.Value);
+                var addedEv = new SurgeryOrganImplantationCompleted(ent.Comp.Body.Value, ent.Owner, insertedUid);
                 RaiseLocalEvent(insertedUid, ref addedEv);
             }
         }

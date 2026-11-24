@@ -159,16 +159,15 @@ public sealed partial class SimpleRadialMenu : RadialMenu
             button.AllowRightClick = actionOption.OnAlternativePressed != null;
             button.OnPressed += args =>
             {
-                // Starlight - start
-                var alternativePressed = args.Event.Function == EngineKeyFunctions.UIRightClick;
-                if (alternativePressed)
+                // Starlight-start
+                if (args.Event.Function == EngineKeyFunctions.UIRightClick)
                     actionOption.OnAlternativePressed?.Invoke();
                 else
                     actionOption.OnPressed?.Invoke();
+                // Starlight-end
 
-                if (!haveNested && (!alternativePressed || !actionOption.KeepOpenOnAlternativePress))
+                if (!haveNested)
                     Close();
-                // Starlight - end
             };
         }
 
@@ -364,7 +363,7 @@ public abstract class RadialMenuOptionBase
 /// <summary> Base type for model of radial menu button with some action on button pressed. </summary>
 /// <param name="onPressed"></param>
 /// <param name="onAlternativePressed">Action to be executed on alternative (right) button press. Starlight-edit</param>
-public abstract partial class RadialMenuActionOptionBase(Action onPressed, Action? onAlternativePressed = null) : RadialMenuOptionBase // Starlight
+public abstract class RadialMenuActionOptionBase(Action onPressed, Action? onAlternativePressed = null) : RadialMenuOptionBase
 {
     /// <summary> Action to be executed on button press. </summary>
     public Action OnPressed { get; } = onPressed;
@@ -424,3 +423,4 @@ public sealed class SimpleRadialMenuSettings
     /// </summary>
     public bool NoBackground = false;
 }
+

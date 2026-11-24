@@ -1216,8 +1216,7 @@
   name: loadout-group-warden-neck
   minLimit: 0
   loadouts:
-  - ClothingNeckWardenCloak
-  - ClothingNeckWardenMantle
+  - ClothingNeckWarden
 
 - type: loadoutGroup
   id: SecurityGloves

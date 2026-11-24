@@ -2,7 +2,7 @@
 - type: quickPhrase
   id: BaseMedicalEquipmentPhrase
   parent: BaseMedicalSubjectPhrase
-  group: aac-group-medical-equipment
+  group: MedicalEquipment
   abstract: true
 
 - type: quickPhrase
